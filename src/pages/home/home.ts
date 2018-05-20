@@ -16,12 +16,14 @@ import { AddPostPage } from '../add-post/add-post'
 export class HomePage {
   comments: any
   posts: any
+  // colors: Array<string> = ['#d5e5ff', '#ffd5ee', '#d5ffe6', '#d5e5ff', '#d5fff7']
 
   constructor(public modalCtrl: ModalController, public navCtrl: NavController, public apiProvider: ApiProvider,
      public alertCtrl: AlertController,public storage: Storage, platform: Platform) {
        platform.registerBackButtonAction(() => {
          console.log("backPressed 1");
        },1);
+
     this.getPosts();
 
 }
@@ -33,14 +35,6 @@ export class HomePage {
   });
   }
 
-  // getComments() {
-  //
-  //   this.apiProvider.getComments()
-  //     .then(data => {
-  //       this.comments = data;
-  //     });
-  // }
-
   doRefresh(refresher) {
      console.log('Begin async operation', refresher);
      this.getPosts();
@@ -50,7 +44,6 @@ export class HomePage {
      }, 100);
    }
 
-
   //get only Posts
   getPosts() {
     this.posts = [];
@@ -59,14 +52,13 @@ export class HomePage {
         this.comments = data;
         this.comments.forEach((x: any) => {
           if (x.parent == null) {
+            x.color=this.getRandomColor();
             this.posts.push(x);
             console.log("get post:"+ JSON.stringify(x));
           }
         })
       })
   }
-
-
 
 //PostDetails push
   pushParams(post) {
@@ -84,7 +76,7 @@ export class HomePage {
   }
 
 //delete confirm alert
-  presentConfirm(post) {
+  presendDelete(post) {
       let alert = this.alertCtrl.create({
         title: 'Confirm delete',
         message: 'Do you want to delete this?',
@@ -107,4 +99,11 @@ export class HomePage {
       });
       alert.present();
     }
+
+  getRandomColor() {
+    let randomColor = "hsl(" + 360 * Math.random() + ',' +
+                 (20 + 70 * Math.random()) + '%,' +
+                 (73 + 10 * Math.random()) + '%)';
+    return(randomColor)
+}
   }

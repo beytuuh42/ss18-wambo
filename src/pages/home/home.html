@@ -14,46 +14,46 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
-    <ion-list *ngFor="let post of posts">
-      <ion-card>
-        <ion-buttons end>
-        <button ion-button icon-only small (click)="presentConfirm(post)"><ion-icon name="md-trash"></ion-icon></button>
-        </ion-buttons>
+    <ion-list>
 
-        <ion-card-content>
-          <p>{{post.content}}</p>
-        </ion-card-content>
+      <ion-item-sliding *ngFor="let post of posts">
 
-        <ion-row>
-          <ion-col>
+          <ion-item class="warpper" [ngStyle]="{'background-color': post.color}">
+
+          <p text-wrap>{{post.content}}</p>
+
+<ion-footer>
+          <ion-row>
+          <ion-col >
             <button ion-button icon-left clear small>
-        <ion-icon name="thumbs-up"></ion-icon>
-        <div>{{post.likes}}</div>
-      </button>
+              <ion-icon name="thumbs-up"></ion-icon>
+              <div>{{post.likes}}</div>
+            </button>
           </ion-col>
           <ion-col>
             <button ion-button icon-left clear small>
-        <ion-icon name="thumbs-down"></ion-icon>
-        <div>{{post.dislikes}}</div>
-      </button>
+              <ion-icon name="thumbs-down"></ion-icon>
+              <div>{{post.dislikes}}</div>
+            </button>
           </ion-col>
           <ion-col>
             <button ion-button icon-left clear small (click)="pushParams(post)">
-        <ion-icon name="text"></ion-icon>
-        <div>{{post.comments}}</div>
-      </button>
+              <ion-icon name="text"></ion-icon>
+              <div>{{post.comments}}</div>
+            </button>
           </ion-col>
         </ion-row>
+</ion-footer>
+    </ion-item>
+    <ion-item-options side="right">
+      <button ion-button (click)="presentConfirm(post)">delete</button>
+    </ion-item-options>
+  </ion-item-sliding>
 
-      </ion-card>
-    </ion-list>
-
-
-
+</ion-list>
 
   <ion-fab showWhen="android" right bottom #fab2>
    <button ion-fab (click)="addPost()"><ion-icon name="md-add"></ion-icon></button>
-
- </ion-fab>
+  </ion-fab>
 
 </ion-content>
