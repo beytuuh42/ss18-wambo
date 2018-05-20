@@ -17,8 +17,7 @@ import { PostPage } from '../pages/post/post';
 import { AddPostPage } from '../pages/add-post/add-post';
 import { HomePageModule } from '../pages/home/home.module'
 import { PostPageModule } from '../pages/post/post.module'
-import { ApiProvider } from '../providers/api/api';
-import { DataProvider } from '../providers/data/data';
+import { ApiProvider } from '../providers/api/api'
 
 
 @NgModule({
@@ -38,7 +37,7 @@ import { DataProvider } from '../providers/data/data';
         ios: {
           tabsPlacement: 'bottom'
         },
-        windows: {
+        core: {
             tabsPlacement: 'top'
           }
       }
@@ -65,7 +64,7 @@ import { DataProvider } from '../providers/data/data';
     SplashScreen,
     StatusBar,
     { provide: ErrorHandler, useClass: IonicErrorHandler },
-    ApiProvider,
-    DataProvider]
+    ApiProvider
+    ]
 })
 export class AppModule { }
