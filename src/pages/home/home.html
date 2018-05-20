@@ -1,15 +1,12 @@
 <!-- main navigation -->
 <ion-header>
-  <ion-navbar>
-    <!-- <ion-buttons left>
-          <button ion-button icon-only (click)="viewCtrl.dismiss()">
-              <ion-icon name="arrow-back"></ion-icon>
-          </button>
-      </ion-buttons> -->
-    <ion-title>
-      wamboo
-    </ion-title>
-  </ion-navbar>
+  <ion-toolbar showWhen="ios">
+    <ion-buttons end >
+      <button (click)="addPost()" ion-button light class="AddPostButton">
+        Add
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content padding>
@@ -20,12 +17,10 @@
     <ion-list *ngFor="let post of posts">
       <ion-card>
         <ion-buttons end>
-      <button (click)="onRemovePost(post)" ion-button >
-        <ion-icon name="x">x</ion-icon>
-      </button>
-    </ion-buttons>
+        <button ion-button icon-only small (click)="presentConfirm(post)"><ion-icon name="md-trash"></ion-icon></button>
+        </ion-buttons>
 
-        <ion-card-content (click)="pushParams(post)">
+        <ion-card-content>
           <p>{{post.content}}</p>
         </ion-card-content>
 
@@ -43,9 +38,9 @@
       </button>
           </ion-col>
           <ion-col>
-            <button ion-button icon-left clear small>
+            <button ion-button icon-left clear small (click)="pushParams(post)">
         <ion-icon name="text"></ion-icon>
-        <div>4 Comments</div>
+        <div>{{post.comments}}</div>
       </button>
           </ion-col>
         </ion-row>
@@ -53,18 +48,12 @@
       </ion-card>
     </ion-list>
 
-  <ion-card>
 
-    <form (ngSubmit)="sendPost()">
-      <ion-item>
-        <ion-label floating>Enter your Message:</ion-label>
-        <ion-input type="text" [(ngModel)]="message.content" name="content"></ion-input>
-      </ion-item>
 
-      <button ion-button primary type="submit" block>send</button>
-    </form>
 
-  </ion-card>
+  <ion-fab showWhen="android" right bottom #fab2>
+   <button ion-fab (click)="addPost()"><ion-icon name="md-add"></ion-icon></button>
 
+ </ion-fab>
 
 </ion-content>

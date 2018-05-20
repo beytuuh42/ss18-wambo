@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
-
+import { Component} from '@angular/core';
+import { IonicPage, NavParams, Platform, NavController } from 'ionic-angular';
+import { ApiProvider } from '../../providers/api/api'
 /**
  * Generated class for the PostPage page.
  *
@@ -15,8 +15,28 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class PostPage {
   post: any;
-    constructor(public params: NavParams) {
+  comment = {content: ''};
+    constructor(public apiProvider: ApiProvider, public params: NavParams,platform: Platform, public navCtrl: NavController) {
+      let backAction =  platform.registerBackButtonAction(() => {
+        console.log("second");
+        this.navCtrl.pop();
+        backAction();
+      },2)
       this.post = params.get('post');
       console.log(this.post);
+    }
+
+
+
+    addComment(){
+      let body = {content: this.comment.content, parent: this.post._id}
+      console.log(JSON.stringify(this.comment.content))
+      this.apiProvider.sendPost(body).then((result) => {
+
+        console.log(result);
+
+      }, (err) => {
+        console.log(err);
+      });
     }
 }
