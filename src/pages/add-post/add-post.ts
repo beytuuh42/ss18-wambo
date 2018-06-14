@@ -11,13 +11,12 @@ export class AddPostPage {
   message = { content: '' }
 
   sendPost() {
-    console.log(this.message);
     this.apiProvider.sendPost(this.message).then((result) => {
-      this.navCtrl.pop();
-      console.log(result);
-
+      this.apiProvider.pushAncestors(result, null).then((x) => {
+        this.navCtrl.pop();
+      })
     }, (err) => {
-      console.log(err);
+      console.log("Error sending post: " + err);
     });
   }
 

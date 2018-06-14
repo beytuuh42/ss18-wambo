@@ -1,4 +1,4 @@
-import { Component} from '@angular/core';
+import { Component } from '@angular/core';
 import { IonicPage, NavParams, Platform, NavController } from 'ionic-angular';
 import { ApiProvider } from '../../providers/api/api'
 /**
@@ -15,28 +15,44 @@ import { ApiProvider } from '../../providers/api/api'
 })
 export class PostPage {
   post: any;
-  comment = {content: ''};
-    constructor(public apiProvider: ApiProvider, public params: NavParams,platform: Platform, public navCtrl: NavController) {
-      let backAction =  platform.registerBackButtonAction(() => {
-        console.log("second");
-        this.navCtrl.pop();
-        backAction();
-      },2)
-      this.post = params.get('post');
-      console.log(this.post);
-    }
+  comment = { content: '' };
+  comments: Array<any> = [];
+  constructor(public apiProvider: ApiProvider, public params: NavParams, platform: Platform, public navCtrl: NavController) {
+    let backAction = platform.registerBackButtonAction(() => {
+      console.log("second");
+      this.navCtrl.pop();
+      backAction();
+    }, 2)
+    this.post = params.get('post');
+    this.getComments();
+  }
 
-
-
-    addComment(){
-      let body = {content: this.comment.content, parent: this.post._id}
-      console.log(JSON.stringify(this.comment.content))
-      this.apiProvider.sendPost(body).then((result) => {
-
+  addComment() {
+    this.apiProvider.sendPost(this.comment).then((result) => {
+      this.apiProvider.pushAncestors(result, this.post.ancestors).then((x) => {
         console.log(result);
+      })
+    }, (err) => {
+      console.log("Error adding comment: " + err.message);
+    });
+  }
 
-      }, (err) => {
-        console.log(err);
+  incrementLike(comment) {
+    this.apiProvider.incrementLike(comment._id);
+  }
+
+  incrementDislike(comment) {
+    this.apiProvider.incrementDislike(comment._id);
+  }
+
+  getComments(){
+    this.apiProvider.getAllChildrenByParent(this.post._id)
+      .then(data => {
+        this.comments = this.apiProvider.setRandomColors(data);
       });
-    }
+  }
+
+  pushParams(comment) {
+    this.navCtrl.push(PostPage, { 'post': comment });
+  }
 }

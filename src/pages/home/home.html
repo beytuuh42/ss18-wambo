@@ -1,7 +1,7 @@
 <!-- main navigation -->
 <ion-header>
   <ion-toolbar showWhen="ios">
-    <ion-buttons end >
+    <ion-buttons end>
       <button (click)="addPost()" ion-button light class="AddPostButton">
         Add
       </button>
@@ -13,47 +13,42 @@
   <ion-refresher (ionRefresh)="doRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
-
-    <ion-list>
-
-      <ion-item-sliding *ngFor="let post of posts">
-
-          <ion-item class="warpper" [ngStyle]="{'background-color': post.color}">
-
-          <p text-wrap>{{post.content}}</p>
-
-<ion-footer>
+  <ion-list>
+    <ion-item-sliding *ngFor="let post of posts">
+      <ion-item class="warpper" [ngStyle]="{'background-color': post.color}" id="{{post._id}}">
+        <p text-wrap>{{post.content}}</p>
+        <ion-footer>
           <ion-row>
-          <ion-col >
-            <button ion-button icon-left clear small>
+            <ion-col>
+              <button ion-button icon-left clear small (click)="incrementLike(post)">
               <ion-icon name="thumbs-up"></ion-icon>
               <div>{{post.likes}}</div>
             </button>
-          </ion-col>
-          <ion-col>
-            <button ion-button icon-left clear small>
+            </ion-col>
+            <ion-col>
+              <button ion-button icon-left clear small (click)="incrementDislike(post)">
               <ion-icon name="thumbs-down"></ion-icon>
               <div>{{post.dislikes}}</div>
             </button>
-          </ion-col>
-          <ion-col>
-            <button ion-button icon-left clear small (click)="pushParams(post)">
+            </ion-col>
+            <ion-col>
+              <button ion-button icon-left clear small (click)="pushParams(post)">
               <ion-icon name="text"></ion-icon>
               <div>{{post.comments}}</div>
             </button>
-          </ion-col>
-        </ion-row>
-</ion-footer>
-    </ion-item>
-    <ion-item-options side="right">
-      <button ion-button (click)="presentConfirm(post)">delete</button>
-    </ion-item-options>
-  </ion-item-sliding>
+            </ion-col>
+          </ion-row>
+        </ion-footer>
+      </ion-item>
+      <ion-item-options side="right">
+        <button ion-button (click)="presentConfirm(post)">delete</button>
+      </ion-item-options>
+    </ion-item-sliding>
 
-</ion-list>
+  </ion-list>
 
   <ion-fab showWhen="android" right bottom #fab2>
-   <button ion-fab (click)="addPost()"><ion-icon name="md-add"></ion-icon></button>
+    <button ion-fab (click)="addPost()"><ion-icon name="md-add"></ion-icon></button>
   </ion-fab>
 
 </ion-content>

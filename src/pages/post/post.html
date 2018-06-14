@@ -1,50 +1,73 @@
 <ion-header>
 
-    <ion-toolbar showWhen="ios">
-      <button ion-button color="light" class="AddPostButton" (click)="addPost()"><ion-icon name="ios-add"></ion-icon></button>
-    </ion-toolbar>
+  <ion-toolbar showWhen="ios">
+    <button ion-button color="light" class="AddPostButton" (click)="addPost()"><ion-icon name="ios-add"></ion-icon></button>
+  </ion-toolbar>
 
+  <ion-navbar>
+    <ion-title>
+      {{post._id}}
+    </ion-title>
+  </ion-navbar>
 
 </ion-header>
 
 <ion-content padding>
 
-  <ion-list >
-    <ion-card>
+  <ion-list>
+    <ion-card id="{{post._id}}" [ngStyle]="{'background-color': post.color}">
 
-  <ion-card-content>
-    <p>{{post.content}}</p>
-  </ion-card-content>
+      <ion-card-content>
+        <p>{{post.content}}</p>
+      </ion-card-content>
 
-  <ion-row>
-    <ion-col >
-      <button ion-button icon-left clear small>
+      <ion-row>
+        <ion-col>
+          <button ion-button icon-left clear small (click)="incrementLike(post)">
         <ion-icon name="thumbs-up"></ion-icon>
         <div>{{post.likes}}</div>
       </button>
-    </ion-col>
-    <ion-col>
-      <button ion-button icon-left clear small>
+        </ion-col>
+        <ion-col>
+          <button ion-button icon-left clear small (click)="incrementDislike(post)">
         <ion-icon name="thumbs-down"></ion-icon>
-        <div>{{post.disklikes}}</div>
+        <div>{{post.dislikes}}</div>
       </button>
-    </ion-col>
+        </ion-col>
 
-  </ion-row>
+      </ion-row>
 
-</ion-card>
+    </ion-card>
 
-<ion-card>
-
-  <form (ngSubmit)="addComment()">
-    <ion-item>
-      <ion-label floating>Enter your Message:</ion-label>
-      <ion-input type="text" [(ngModel)]="comment.content" name="content"></ion-input>
-    </ion-item>
-
-    <button ion-button primary type="submit" block>send</button>
-  </form>
-
-</ion-card>
-    </ion-list>
+    <ion-item-sliding *ngFor="let comment of comments">
+      <ion-item class="warpper" [ngStyle]="{'background-color': comment.color}" id="{{comment._id}}">
+        <p text-wrap>{{comment.content}}</p>
+        <ion-footer>
+          <ion-row>
+            <ion-col>
+              <button ion-button icon-left clear small (click)="incrementLike(comment)">
+              <ion-icon name="thumbs-up"></ion-icon>
+              <div>{{comment.likes}}</div>
+            </button>
+            </ion-col>
+            <ion-col>
+              <button ion-button icon-left clear small (click)="incrementDislike(comment)">
+              <ion-icon name="thumbs-down"></ion-icon>
+              <div>{{comment.dislikes}}</div>
+            </button>
+            </ion-col>
+            <ion-col>
+              <button ion-button icon-left clear small (click)="pushParams(comment)">
+              <ion-icon name="text"></ion-icon>
+              <div>{{comment.comments}}</div>
+            </button>
+            </ion-col>
+          </ion-row>
+        </ion-footer>
+      </ion-item>
+      <ion-item-options side="right">
+        <button ion-button (click)="presentConfirm(post)">delete</button>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
 </ion-content>

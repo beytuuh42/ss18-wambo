@@ -1,4 +1,4 @@
-module.exports = function(app){
+module.exports = function(app) {
   var comment = require('../models/commentModel');
 
   app.route('/api/comments')
@@ -10,6 +10,9 @@ module.exports = function(app){
     .get(comment.getCommentById)
     .put(comment.setCommentById)
     .delete(comment.deleteCommentById);
+
+  app.route('/api/qwe')
+    .get(comment.testMethod);
 
   app.route('/api/qwe/:commentId')
     .get(comment.getNestedCommentsByParentId);

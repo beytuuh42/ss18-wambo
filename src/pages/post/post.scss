@@ -1,3 +1,17 @@
 page-post {
+  ion-item-sliding {
+    margin: 10px;
+    margin-left:35px;
+    width:  80%;
+    align: center;
+  }
 
+  ion-item {
+    min-height: 100px !important;
+    p {
+      font-size: 1.5rem !important;
+      color: color($colors, dark) !important;
+      margin-bottom: 30px !important;
+    }
+  }
 }
