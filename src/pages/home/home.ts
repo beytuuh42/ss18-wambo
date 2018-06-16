@@ -2,7 +2,6 @@ import { Component } from '@angular/core'
 import { ModalController, NavController, AlertController, Platform } from 'ionic-angular'
 import { Storage } from '@ionic/storage';
 
-
 import { PostPage } from '../post/post'
 import { ApiProvider } from '../../providers/api/api'
 import { AddPostPage } from '../add-post/add-post'
@@ -15,20 +14,23 @@ import { AddPostPage } from '../add-post/add-post'
 })
 export class HomePage {
   comments: any;
-  posts: any[] = [];
+  posts: any[];
   message = {
     content: ''
   }
+  val = 10;
   // colors: Array<string> = ['#d5e5ff', '#ffd5ee', '#d5ffe6', '#d5e5ff', '#d5fff7']
 
-  constructor(public modalCtrl: ModalController, public navCtrl: NavController, public apiProvider: ApiProvider,
-    public alertCtrl: AlertController, public storage: Storage, platform: Platform) {
+  constructor(public modalCtrl: ModalController,
+              public navCtrl: NavController,
+              public apiProvider: ApiProvider,
+              public alertCtrl: AlertController,
+              public storage: Storage,
+              platform: Platform) {
     platform.registerBackButtonAction(() => {
       console.log("backPressed 1");
     }, 1);
-
     this.getPosts();
-
   }
 
   delete(post) {
@@ -112,9 +114,23 @@ export class HomePage {
 
   incrementLike(post) {
     this.apiProvider.incrementLike(post._id);
+    this.posts.forEach((x: any) => {
+      if (x._id == post._id) {
+      x.likes ++;
+      }
+    });
   }
 
   incrementDislike(post) {
-    this.apiProvider.incrementDislike(post._id);
+    this.apiProvider.incrementDislike(post._id).then((result) => {
+      this.posts.forEach((x: any) => {
+        if (x._id == post._id) {
+        x.dislikes --;
+        }
+      });
+      console.log(result);
+    }, (err) => {
+      console.log("Error sending post: " + err.message);
+    });
   }
 }

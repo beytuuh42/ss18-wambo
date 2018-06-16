@@ -29,4 +29,7 @@ export class AddPostPage {
     console.log('ionViewDidLoad AddPostPage');
   }
 
+  
+
+
 }

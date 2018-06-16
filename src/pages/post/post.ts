@@ -1,12 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavParams, Platform, NavController } from 'ionic-angular';
 import { ApiProvider } from '../../providers/api/api'
-/**
- * Generated class for the PostPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
 
 @IonicPage()
 @Component({
@@ -25,6 +19,15 @@ export class PostPage {
     }, 2)
     this.post = params.get('post');
     this.getComments();
+  }
+
+  doRefresh(refresher) {
+    console.log('Begin async operation', refresher);
+    this.getComments();
+    setTimeout(() => {
+      console.log('Async operation has ended');
+      refresher.complete();
+    }, 100);
   }
 
   addComment() {

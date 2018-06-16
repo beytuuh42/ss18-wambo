@@ -13,7 +13,9 @@
 </ion-header>
 
 <ion-content padding>
-
+  <ion-refresher (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
   <ion-list>
     <ion-card id="{{post._id}}" [ngStyle]="{'background-color': post.color}">
 
@@ -30,13 +32,16 @@
         </ion-col>
         <ion-col>
           <button ion-button icon-left clear small (click)="incrementDislike(post)">
-        <ion-icon name="thumbs-down"></ion-icon>
-        <div>{{post.dislikes}}</div>
+            <ion-icon name="thumbs-down"></ion-icon>
+            <div>{{post.dislikes}}</div>
+          </button>
+        </ion-col>
+        <ion-col>
+          <button ion-button icon-left clear small>
+        <ion-icon name="add-circle"></ion-icon>
       </button>
         </ion-col>
-
       </ion-row>
-
     </ion-card>
 
     <ion-item-sliding *ngFor="let comment of comments">

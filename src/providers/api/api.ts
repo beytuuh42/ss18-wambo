@@ -35,6 +35,7 @@ export class ApiProvider {
   }
 
   getPosts() {
+  posts = [];
     return new Promise(resolve => {
       this.http.get(url + 'comments').subscribe(data => {
         data.forEach((x: any) => {
@@ -86,7 +87,7 @@ export class ApiProvider {
 
     return new Promise((resolve, reject) => {
       return this.http.put(url + "comments/" + id, data, {
-        headers: jsonHeader,
+        headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
         observe: 'response'
       })
         .subscribe(res => {
@@ -98,11 +99,12 @@ export class ApiProvider {
   }
 
   incrementLike(id) {
-    this.getCommentById(id).then((result) => {
-      result.likes += 1;
+
       return new Promise((resolve, reject) => {
+        this.getCommentById(id).then((result) => {
+          result.likes += 1;
         return this.http.put(url + "comments/" + id, result, {
-          headers: jsonHeader,
+          headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
           observe: 'response'
         })
           .subscribe(res => {
@@ -115,11 +117,11 @@ export class ApiProvider {
   }
 
   incrementDislike(id) {
-    this.getCommentById(id).then((result) => {
-      result.dislikes += 1;
       return new Promise((resolve, reject) => {
+        this.getCommentById(id).then((result) => {
+          result.dislikes += 1;
         return this.http.put(url + "comments/" + id, result, {
-          headers: jsonHeader,
+          headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
           observe: 'response'
         })
           .subscribe(res => {
