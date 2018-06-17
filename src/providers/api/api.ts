@@ -21,7 +21,7 @@ export class ApiProvider {
 
   getComments() {
     return new Promise(resolve => {
-      this.http.get(url + 'comments').subscribe(data => {
+      this.http.get<any[]>(url + 'comments').subscribe(data => {
         data.forEach((x: any) => {
           if (x.ancestors.length > 1) {
             comments.push(x);
@@ -37,7 +37,7 @@ export class ApiProvider {
   getPosts() {
   posts = [];
     return new Promise(resolve => {
-      this.http.get(url + 'comments').subscribe(data => {
+      this.http.get<any[]>(url + 'comments').subscribe(data => {
         data.forEach((x: any) => {
           if (x.ancestors.length == 1) {
             posts.push(x);
@@ -53,8 +53,9 @@ export class ApiProvider {
   getCommentById(id) {
     var path = url + 'comments/' + id;
     return new Promise(resolve => {
-      this.http.get(path).subscribe(data => {
+      this.http.get<any[]>(path).subscribe(data => {
         resolve(data);
+        console.log("api said: " + JSON.stringify(data))
       }, err => {
         console.log("Error fetching comment by ID: " + err.message);
       });
@@ -63,7 +64,7 @@ export class ApiProvider {
 
   sendPost(data) {
     return new Promise((resolve, reject) => {
-      return this.http.post(url + "comments", data, {
+      return this.http.post<any[]>(url + "comments", data, {
         headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
         observe: 'response'
       })
@@ -86,7 +87,7 @@ export class ApiProvider {
     }
 
     return new Promise((resolve, reject) => {
-      return this.http.put(url + "comments/" + id, data, {
+      return this.http.put<any[]>(url + "comments/" + id, data, {
         headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
         observe: 'response'
       })
@@ -103,7 +104,7 @@ export class ApiProvider {
       return new Promise((resolve, reject) => {
         this.getCommentById(id).then((result) => {
           result.likes += 1;
-        return this.http.put(url + "comments/" + id, result, {
+        return this.http.put<any[]>(url + "comments/" + id, result, {
           headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
           observe: 'response'
         })
@@ -136,7 +137,7 @@ export class ApiProvider {
   getAllChildrenByParent(id) {
     var path = url + 'qwe/' + id;
     return new Promise((resolve, reject) => {
-      return this.http.get(path).subscribe(data => {
+      return this.http.get<any[]>(path).subscribe(data => {
         resolve(data);
       }, err => {
         console.log("Error getting childs: " + err.message);
@@ -146,8 +147,7 @@ export class ApiProvider {
 
   deletePostById(_id) {
     console.log(_id);
-    return this.http
-      .delete(url + 'comments/' + _id, {
+    return this.http.delete<any[]>(url + 'comments/' + _id, {
         headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
         observe: 'response'
       })
@@ -169,6 +169,7 @@ export class ApiProvider {
 
   setRandomColor(data){
     data.color = this.getRandomColor();
+    console.log(data.color)
     return data;
   }
 }

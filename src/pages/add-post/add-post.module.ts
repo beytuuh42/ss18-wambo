@@ -8,6 +8,6 @@ import { AddPostPage } from './add-post';
   ],
   imports: [
     IonicPageModule.forChild(AddPostPage),
-  ],
+  ]
 })
 export class AddPostPageModule {}

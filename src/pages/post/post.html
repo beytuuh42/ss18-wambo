@@ -1,8 +1,8 @@
 <ion-header>
 
-  <ion-toolbar showWhen="ios">
+  <!-- <ion-toolbar showWhen="ios">
     <button ion-button color="light" class="AddPostButton" (click)="addPost()"><ion-icon name="ios-add"></ion-icon></button>
-  </ion-toolbar>
+  </ion-toolbar> -->
 
   <ion-navbar>
     <ion-title>
@@ -17,12 +17,41 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
   <ion-list>
-    <ion-card id="{{post._id}}" [ngStyle]="{'background-color': post.color}">
 
+    <ion-item-sliding>
+      <ion-item id="{{post._id}}" [ngStyle]="{'background-color': post.color}">
+        <p text-wrap>{{post.content}}</p>
+        <ion-footer>
+          <ion-row>
+            <ion-col>
+              <button ion-button icon-left clear small (click)="incrementLike(post)">
+              <ion-icon name="thumbs-up"></ion-icon>
+              <div>{{post.likes}}</div>
+            </button>
+            </ion-col>
+            <ion-col>
+              <button ion-button icon-left clear small (click)="incrementDislike(post)">
+              <ion-icon name="thumbs-down"></ion-icon>
+              <div>{{post.dislikes}}</div>
+            </button>
+            </ion-col>
+            <ion-col>
+              <button ion-button icon-left clear small (click)="pushAddPost(post._id)">
+            <ion-icon name="add-circle"></ion-icon>
+          </button>
+            </ion-col>
+          </ion-row>
+        </ion-footer>
+      </ion-item>
+      <ion-item-options side="right">
+        <button ion-button (click)="presendDelete(post)">delete</button>
+      </ion-item-options>
+    </ion-item-sliding>
+
+    <!-- <ion-card id="{{post._id}}" [ngStyle]="{'background-color': post.color}">
       <ion-card-content>
         <p>{{post.content}}</p>
       </ion-card-content>
-
       <ion-row>
         <ion-col>
           <button ion-button icon-left clear small (click)="incrementLike(post)">
@@ -37,14 +66,17 @@
           </button>
         </ion-col>
         <ion-col>
-          <button ion-button icon-left clear small>
+          <button ion-button icon-left clear small (click)="pushAddPost(post._id)">
         <ion-icon name="add-circle"></ion-icon>
       </button>
         </ion-col>
       </ion-row>
     </ion-card>
+    <ion-card id="{{post._id}}" [ngStyle]="{'background-color': post.color}"> -->
 
-    <ion-item-sliding *ngFor="let comment of comments">
+
+    <!-- </ion-card> -->
+    <ion-item-sliding class="secondLevel" *ngFor="let comment of comments">
       <ion-item class="warpper" [ngStyle]="{'background-color': comment.color}" id="{{comment._id}}">
         <p text-wrap>{{comment.content}}</p>
         <ion-footer>
@@ -62,7 +94,7 @@
             </button>
             </ion-col>
             <ion-col>
-              <button ion-button icon-left clear small (click)="pushParams(comment)">
+              <button ion-button icon-left clear small (click)="pushParams(comment._id)">
               <ion-icon name="text"></ion-icon>
               <div>{{comment.comments}}</div>
             </button>

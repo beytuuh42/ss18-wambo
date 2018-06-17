@@ -9,8 +9,7 @@ import { AddPostPage } from '../add-post/add-post'
 
 @Component({
   selector: 'page-home',
-  templateUrl: 'home.html',
-
+  templateUrl: 'home.html'
 })
 export class HomePage {
   comments: any;
@@ -61,11 +60,14 @@ export class HomePage {
     this.navCtrl.push(PostPage, { 'post': post });
   }
 
+  pushAddPost() {
+    this.navCtrl.push(AddPostPage);
+  }
+
   addPost() {
     let addPostmodal = this.modalCtrl.create(AddPostPage)
     addPostmodal.onDidDismiss(() => {
       this.getPosts();
-
     })
     addPostmodal.present()
   }
@@ -113,22 +115,18 @@ export class HomePage {
   }
 
   incrementLike(post) {
-    this.apiProvider.incrementLike(post._id);
-    this.posts.forEach((x: any) => {
-      if (x._id == post._id) {
-      x.likes ++;
-      }
+    this.apiProvider.incrementLike(post._id).then((result) => {
+      post.likes = result.body.likes;
+      // this.posts.find(x => x._id === post._id).likes = result.body.likes;
+    }, (err) => {
+      console.log("Error incremending like: " + err.message);
     });
   }
 
   incrementDislike(post) {
     this.apiProvider.incrementDislike(post._id).then((result) => {
-      this.posts.forEach((x: any) => {
-        if (x._id == post._id) {
-        x.dislikes --;
-        }
-      });
-      console.log(result);
+        post.dislikes = result.body.dislikes;
+      // this.posts.find(x => x._id === post._id).dislikes = result.body.dislikes;
     }, (err) => {
       console.log("Error sending post: " + err.message);
     });
