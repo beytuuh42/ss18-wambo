@@ -1,22 +1,28 @@
 module.exports = function(app) {
-  var comment = require('../models/commentModel');
+  var commentManager = require('../models/commentManager');
 
   app.route('/api/comments')
-    .get(comment.getAllComments)
-    .post(comment.createComment)
-    .delete(comment.deleteAllComments);
+    .get(commentManager.getAllComments)
+    .post(commentManager.createComment)
+    .delete(commentManager.deleteAllComments); //delete all is never used
 
   app.route('/api/comments/:commentId')
-    .get(comment.getCommentById)
-    .put(comment.setCommentById)
-    .delete(comment.deleteCommentById);
+    .get(commentManager.getCommentById)
+    .put(commentManager.setCommentById)
+    .delete(commentManager.deleteCommentById);
 
-  app.route('/api/qwe')
-    .get(comment.testMethod);
+  app.route('/api/nested/:commentId')
+    .get(commentManager.getNestedCommentsByParentId);
 
-  app.route('/api/qwe/:commentId')
-    .get(comment.getNestedCommentsByParentId);
+  // app.route('/api/test/:commentId')
+  //   .get(commentManager.getAllParentsById);
 
-  app.route('/api/test/:commentId')
-    .get(comment.getAllParentsById);
+  app.route('/api/users/:userId/likes')
+    .get(commentManager.getUserTotalReceivedLikes);
+
+  app.route('/api/users/:userId/dislikes')
+    .get(commentManager.getUserTotalReceivedDislikes);
+
+    app.route('/api/users/:userId/comments')
+      .get(commentManager.getUserTotalComments);
 };

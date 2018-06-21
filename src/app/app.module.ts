@@ -28,6 +28,7 @@ import { RegisterPageModule } from '../pages/register/register.module';
 import { TabsPageModule } from '../pages/tabs-page/tabs-page.module';
 
 import { ApiProvider } from '../providers/api/api'
+import { UserController } from '../providers/api/userController'
 import { AuthService } from '../providers/auth-service/auth-service';
 
 @NgModule({
@@ -36,17 +37,12 @@ import { AuthService } from '../providers/auth-service/auth-service';
   ],
   imports: [
     IonicModule.forRoot(MyApp, {
-      tabsPlacement: 'bottom',
+      tabsHideOnSubPages: true,
+      tabsPlacement: 'top',
       platforms: {
-        android: {
-          tabsPlacement: 'top'
-        },
         ios: {
           tabsPlacement: 'bottom'
-        },
-        core: {
-            tabsPlacement: 'top'
-          }
+        }
       }
     }),
     BrowserModule,
@@ -70,12 +66,14 @@ import { AuthService } from '../providers/auth-service/auth-service';
     PostPage,
     AddPostPage,
     LoginPage,
+    RegisterPage
   ],
   providers: [
     SplashScreen,
     StatusBar,
     { provide: ErrorHandler, useClass: IonicErrorHandler },
     ApiProvider,
+    UserController,
     AuthService
   ]
 })

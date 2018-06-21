@@ -16,8 +16,8 @@ app.use(bp.json());
 var commentRoutes = require('./server/api/routes/commentRoutes');
 commentRoutes(app);
 
-// var postRoutes = require('./server/api/routes/postRoutes');
-// postRoutes(app);
+var userRoutes = require('./server/api/routes/userRoutes');
+userRoutes(app);
 
 app.use(function(req, res) {
   res.status(404).send({url: req.originalUrl + ' not found'})

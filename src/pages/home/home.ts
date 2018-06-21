@@ -5,6 +5,7 @@ import { Storage } from '@ionic/storage';
 import { PostPage } from '../post/post'
 import { ApiProvider } from '../../providers/api/api'
 import { AddPostPage } from '../add-post/add-post'
+import { TabsPage } from '../tabs-page/tabs-page'
 import { AuthService } from '../../providers/auth-service/auth-service'
 
 @Component({
@@ -34,19 +35,23 @@ export class HomePage {
     this.getPosts();
   }
 
+  ionViewWillEnter(){
+    this.doRefresh(null);
+  }
+
   delete(post) {
-    this.apiProvider.deletePostById(post._id).subscribe((response) => {
-      this.getPosts()
-      console.log("deletePostById said: " + response);
-    });
+    this.apiProvider.deletePostById(post._id)
+    .then(data => {
+      this.getPosts();
+      console.log("deletePostById said: " + data);
+    })
   }
 
   doRefresh(refresher) {
     console.log('Begin async operation', refresher);
     this.getPosts();
     setTimeout(() => {
-      //console.log('Async operation has ended');
-      refresher.complete();
+      if (refresher) refresher.complete();
     }, 100);
   }
 
@@ -91,6 +96,7 @@ export class HomePage {
           text: 'Delete',
           handler: () => {
             this.delete(post);
+            this.doRefresh(null);
             console.log('Post deleted');
           }
         }

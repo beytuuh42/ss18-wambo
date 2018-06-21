@@ -27,7 +27,8 @@ export class AddPostPage {
         this.navCtrl.pop();
       })
     }, (err) => {
-      console.log("Error sending post: " + err);
+      console.log("Error sending post");
+      console.log(err.message);
     });
   }
 

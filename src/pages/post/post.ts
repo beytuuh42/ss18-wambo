@@ -26,21 +26,25 @@ export class PostPage {
 
   }
 
+  ionViewWillEnter(){
+    this.doRefresh(null);
+  }
+
   doRefresh(refresher) {
-    //console.log('Begin async operation', refresher);
     this.getComments()
     this.getPostById(this.id)
     setTimeout(() => {
-      //console.log('Async operation has ended');
-      refresher.complete()
+      if(refresher) refresher.complete()
     }, 100);
   }
 
   delete(post) {
-    this.apiProvider.deletePostById(post._id).subscribe((response) => {
-      this.getPosts()
-      //console.log("deletePostById said: " + response);
-    });
+    this.apiProvider.deletePostById(post._id).then(data => {
+      this.getPosts();
+      this.doRefresh(null);
+      console.log("deletePostById said");
+      console.log(data);
+    })
   }
   getPostById(id){
   this.apiProvider.getCommentById(id)
@@ -131,6 +135,9 @@ export class PostPage {
           text: 'Delete',
           handler: () => {
             this.delete(post);
+            if(post._id == this.id){
+              this.navCtrl.pop();
+            }
             console.log('Post deleted');
           }
         }

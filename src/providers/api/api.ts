@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { AuthService } from '../auth-service/auth-service';
 /*
   Ge*nerated class for the ApiProvider provider.
 
@@ -7,21 +8,27 @@ import { Injectable } from '@angular/core';
   and Angular DI.
 */
 
-let url = "proxy/"
+let url = "proxy/";
+let prefixComments = "comments/";
+let prefixNested = "nested/";
 let posts = [];
 let comments = [];
-let jsonHeader = new Headers({
-  'Content-Type': 'application/JSON'
-});
+let path = "";
+let jsonHeader = new HttpHeaders({ 'Content-Type': 'application/json' });
 
 @Injectable()
 export class ApiProvider {
 
-  constructor(public http: HttpClient) { }
+  constructor(public http: HttpClient, public authService:AuthService) { }
+
+  getLikeAmount() {
+
+  }
 
   getComments() {
-    return new Promise(resolve => {
-      this.http.get<any[]>(url + 'comments').subscribe(data => {
+    path = url + prefixComments;
+    return new Promise((resolve, reject) => {
+      this.http.get<any[]>(path).subscribe(data => {
         data.forEach((x: any) => {
           if (x.ancestors.length > 1) {
             comments.push(x);
@@ -30,14 +37,16 @@ export class ApiProvider {
         resolve(comments);
       }, err => {
         console.log("Error fetching comments: " + err.message);
+        reject(err);
       });
     });
   }
 
   getPosts() {
-  posts = [];
-    return new Promise(resolve => {
-      this.http.get<any[]>(url + 'comments').subscribe(data => {
+    path = url + prefixComments;
+    posts = [];
+    return new Promise((resolve, reject) => {
+      this.http.get<any[]>(path).subscribe(data => {
         data.forEach((x: any) => {
           if (x.ancestors.length == 1) {
             posts.push(x);
@@ -46,31 +55,36 @@ export class ApiProvider {
         resolve(posts);
       }, err => {
         console.log("Error fetching posts: " + err.message);
+        reject(err);
       });
     });
   }
 
   getCommentById(id) {
-    var path = url + 'comments/' + id;
-    return new Promise(resolve => {
+    path = url + prefixComments + id;
+    return new Promise((resolve,reject) => {
       this.http.get<any[]>(path).subscribe(data => {
         resolve(data);
-        //console.log("api said: " + JSON.stringify(data))
       }, err => {
         console.log("Error fetching comment by ID: " + err.message);
+        reject(err);
       });
     });
   }
 
   sendPost(data) {
+    let author = this.authService.getUserInfo()._id;
+    data.author = author;
+    path = url + prefixComments;
     return new Promise((resolve, reject) => {
-      return this.http.post<any[]>(url + "comments", data, {
-        headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+      return this.http.post(path, data, {
+        headers: jsonHeader,
         observe: 'response'
       })
         .subscribe(res => {
           resolve(res);
         }, (err) => {
+          console.log("Error creating post: " + err.message);
           reject(err);
         });
     });
@@ -79,7 +93,8 @@ export class ApiProvider {
   pushAncestors(result, ancestors) {
     var data = result.body;
     var id = result.body._id;
-    if(ancestors == null){
+    path = url + prefixComments + id;
+    if (ancestors == null) {
       data.ancestors.push(id);
     } else {
       data.ancestors = ancestors;
@@ -87,30 +102,32 @@ export class ApiProvider {
     }
 
     return new Promise((resolve, reject) => {
-      return this.http.put<any[]>(url + "comments/" + id, data, {
-        headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+      return this.http.put<any[]>(path, data, {
+        headers: jsonHeader,
         observe: 'response'
       })
         .subscribe(res => {
           resolve(res);
         }, (err) => {
+          console.log("Error creating post: " + err.message);
           reject(err);
         });
     });
   }
 
   incrementLike(id) {
-
-      return new Promise((resolve, reject) => {
-        this.getCommentById(id).then((result:any) => {
-          result.likes += 1;
-        return this.http.put<any[]>(url + "comments/" + id, result, {
-          headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+    path = url + prefixComments + id;
+    return new Promise((resolve, reject) => {
+      this.getCommentById(id).then((result: any) => {
+        result.likes += 1;
+        return this.http.put<any[]>(path, result, {
+          headers: jsonHeader,
           observe: 'response'
         })
           .subscribe(res => {
             resolve(res);
           }, (err) => {
+            console.log("Error incrementing like: " + err.message);
             reject(err);
           });
       });
@@ -118,16 +135,18 @@ export class ApiProvider {
   }
 
   incrementDislike(id) {
-      return new Promise((resolve, reject) => {
-        this.getCommentById(id).then((result:any) => {
-          result.dislikes += 1;
-        return this.http.put(url + "comments/" + id, result, {
-          headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+    path = url + prefixComments + id;
+    return new Promise((resolve, reject) => {
+      this.getCommentById(id).then((result: any) => {
+        result.dislikes += 1;
+        return this.http.put(path, result, {
+          headers: jsonHeader,
           observe: 'response'
         })
           .subscribe(res => {
             resolve(res);
           }, (err) => {
+            console.log("Error incrementing dislike: " + err.message);
             reject(err);
           });
       });
@@ -135,22 +154,32 @@ export class ApiProvider {
   }
 
   getAllChildrenByParent(id) {
-    var path = url + 'qwe/' + id;
+    path = url + prefixNested + id;
     return new Promise((resolve, reject) => {
       return this.http.get<any[]>(path).subscribe(data => {
         resolve(data);
       }, err => {
         console.log("Error getting childs: " + err.message);
+        reject(err);
       })
     });
   }
 
-  deletePostById(_id) {
-    console.log(_id);
-    return this.http.delete<any[]>(url + 'comments/' + _id, {
-        headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+  deletePostById(id) {
+    path = url + prefixComments + id;
+    return new Promise((resolve,reject) => {
+      return this.http.delete<any[]>(path, {
+        headers: jsonHeader,
         observe: 'response'
       })
+      .subscribe(res => {
+        resolve(res);
+      }, (err) => {
+        console.log("Error deleting post: " + err.message);
+        reject(err);
+      })
+    })
+
   }
 
   getRandomColor() {
@@ -160,16 +189,15 @@ export class ApiProvider {
     return (randomColor)
   }
 
-  setRandomColors(data){
-    data.forEach((x:any) => {
+  setRandomColors(data) {
+    data.forEach((x: any) => {
       x.color = this.getRandomColor();
     });
     return data;
   }
 
-  setRandomColor(data){
+  setRandomColor(data) {
     data.color = this.getRandomColor();
-    //console.log(data.color)
     return data;
   }
 }
