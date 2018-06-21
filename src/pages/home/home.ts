@@ -5,12 +5,13 @@ import { Storage } from '@ionic/storage';
 import { PostPage } from '../post/post'
 import { ApiProvider } from '../../providers/api/api'
 import { AddPostPage } from '../add-post/add-post'
-
+import { AuthService } from '../../providers/auth-service/auth-service'
 
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
 })
+
 export class HomePage {
   comments: any;
   posts: any[];
@@ -26,8 +27,9 @@ export class HomePage {
               public alertCtrl: AlertController,
               public storage: Storage,
               platform: Platform) {
+    //let authInfo = this.auth.getUserInfo()
     platform.registerBackButtonAction(() => {
-      console.log("backPressed 1");
+      //console.log("backPressed 1");
     }, 1);
     this.getPosts();
   }
@@ -43,7 +45,7 @@ export class HomePage {
     console.log('Begin async operation', refresher);
     this.getPosts();
     setTimeout(() => {
-      console.log('Async operation has ended');
+      //console.log('Async operation has ended');
       refresher.complete();
     }, 100);
   }
@@ -105,9 +107,9 @@ export class HomePage {
   }
 
   sendPost() {
-    this.apiProvider.sendPost(this.message).then((result) => {
-      this.apiProvider.pushAncestors(result).then((abc) => {
-        console.log(result);
+    this.apiProvider.sendPost(this.message).then((result:any) => {
+      this.apiProvider.pushAncestors(result, result.body.ancestors).then((abc) => {
+        //console.log(result);
       })
     }, (err) => {
       console.log("Error sending post: " + err.message);
@@ -115,7 +117,7 @@ export class HomePage {
   }
 
   incrementLike(post) {
-    this.apiProvider.incrementLike(post._id).then((result) => {
+    this.apiProvider.incrementLike(post._id).then((result:any) => {
       post.likes = result.body.likes;
       // this.posts.find(x => x._id === post._id).likes = result.body.likes;
     }, (err) => {
@@ -124,7 +126,7 @@ export class HomePage {
   }
 
   incrementDislike(post) {
-    this.apiProvider.incrementDislike(post._id).then((result) => {
+    this.apiProvider.incrementDislike(post._id).then((result:any) => {
         post.dislikes = result.body.dislikes;
       // this.posts.find(x => x._id === post._id).dislikes = result.body.dislikes;
     }, (err) => {

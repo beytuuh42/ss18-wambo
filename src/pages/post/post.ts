@@ -9,17 +9,17 @@ import { AddPostPage } from '../add-post/add-post'
   templateUrl: 'post.html',
 })
 export class PostPage {
-  post: any= [];
+  post: any = [];
   comment = { content: '' };
   comments: Array<any> = [];
   id;
 
   constructor(public apiProvider: ApiProvider, public params: NavParams, platform: Platform, public navCtrl: NavController, public modalCtrl: ModalController, public alertCtrl: AlertController) {
-    console.log(params.get('post'))
+    //console.log(params.get('post'))
     this.id = params.get('post')
     this.getPostById(this.id);
     let backAction = platform.registerBackButtonAction(() => {
-      console.log("second");
+      //console.log("second");
       this.navCtrl.pop();
       backAction();
     }, 2)
@@ -27,11 +27,11 @@ export class PostPage {
   }
 
   doRefresh(refresher) {
-    console.log('Begin async operation', refresher);
+    //console.log('Begin async operation', refresher);
     this.getComments()
     this.getPostById(this.id)
     setTimeout(() => {
-      console.log('Async operation has ended');
+      //console.log('Async operation has ended');
       refresher.complete()
     }, 100);
   }
@@ -39,7 +39,7 @@ export class PostPage {
   delete(post) {
     this.apiProvider.deletePostById(post._id).subscribe((response) => {
       this.getPosts()
-      console.log("deletePostById said: " + response);
+      //console.log("deletePostById said: " + response);
     });
   }
   getPostById(id){
@@ -59,9 +59,10 @@ export class PostPage {
   }
 
   addComment() {
+    console.log("Add comment")
     this.apiProvider.sendPost(this.comment).then((result) => {
       this.apiProvider.pushAncestors(result, this.post.ancestors).then((x) => {
-        console.log(result);
+        console.log(this.post.ancestors);
       })
     }, (err) => {
       console.log("Error adding comment: " + err.message);
@@ -69,8 +70,8 @@ export class PostPage {
   }
 
   incrementLike(comment) {
-    this.apiProvider.incrementLike(comment._id).then((result) => {
-      console.log("increment : " + JSON.stringify(result))
+    this.apiProvider.incrementLike(comment._id).then((result:any) => {
+      //console.log("increment : " + JSON.stringify(result))
       // this.post.likes = result.body.likes;
       comment.likes = result.body.likes;
     }, (err) => {
@@ -79,8 +80,8 @@ export class PostPage {
   }
 
   incrementDislike(comment) {
-    this.apiProvider.incrementDislike(comment._id).then((result) => {
-      console.log("increment : " + JSON.stringify(result))
+    this.apiProvider.incrementDislike(comment._id).then((result:any) => {
+      //console.log("increment : " + JSON.stringify(result))
       comment.dislikes = result.body.dislikes;
     }, (err) => {
       console.log("Error incremending like: " + err.message);
@@ -91,7 +92,7 @@ export class PostPage {
   getComments(){
     this.apiProvider.getAllChildrenByParent(this.post._id)
       .then(data => {
-        console.log(data)
+        //console.log(data)
         this.comments = this.apiProvider.setRandomColors(data);
       });
   }
@@ -105,12 +106,12 @@ export class PostPage {
   }
 
   pushParams(post) {
-    console.log(JSON.stringify(post))
+    //console.log(JSON.stringify(post))
     this.navCtrl.push(PostPage, { 'post': post });
   }
 
-  pushAddPost(ancestor) {
-    this.navCtrl.push(AddPostPage, { 'ancestor': ancestor });
+  pushAddPost(ancestors) {
+    this.navCtrl.push(AddPostPage, { 'ancestors': ancestors });
   }
 
   //delete confirm alert

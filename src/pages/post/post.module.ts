@@ -9,12 +9,6 @@ import { IonicPageModule } from 'ionic-angular';
   ],
   imports: [
     IonicPageModule.forChild(PostPage),
-  ],
-  entryComponents: [
-    PostPage,
-  ],
-  exports: [
-    PostPage
   ]
 })
 export class PostPageModule {}

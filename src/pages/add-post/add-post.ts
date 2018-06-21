@@ -8,20 +8,22 @@ import { ApiProvider } from '../../providers/api/api'
   templateUrl: 'add-post.html',
 })
 export class AddPostPage {
-  message = { content: '', ancestors : '' }
+  message = { content: ''}
+  ancestors: Array<any> = [];
+
   constructor(public navCtrl: NavController, public params: NavParams, public apiProvider: ApiProvider, platform: Platform) {
-  this.message.ancestors = params.get('ancestor')
-  let backAction = platform.registerBackButtonAction(() => {
-    console.log("second");
-    this.navCtrl.pop();
-    backAction();
-  }, 2)
+    this.ancestors = params.get('ancestors')
+    let backAction = platform.registerBackButtonAction(() => {
+      console.log("second");
+      this.navCtrl.pop();
+      backAction();
+    }, 2)
   }
 
   sendPost() {
-    console.log(JSON.stringify(this.message) + "  sendposttest mit ancestor jo  " + this.params.get('ancestor'))
+    //console.log(JSON.stringify(this.message) + "  sendposttest mit ancestor jo  " + this.params.get('ancestor'))
     this.apiProvider.sendPost(this.message).then((result) => {
-      this.apiProvider.pushAncestors(result, null).then((x) => {
+      this.apiProvider.pushAncestors(result, this.ancestors).then((x) => {
         this.navCtrl.pop();
       })
     }, (err) => {
@@ -30,8 +32,6 @@ export class AddPostPage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad AddPostPage');
+    //console.log('ionViewDidLoad AddPostPage');
   }
-
-
 }

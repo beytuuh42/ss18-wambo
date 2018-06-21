@@ -55,7 +55,7 @@ export class ApiProvider {
     return new Promise(resolve => {
       this.http.get<any[]>(path).subscribe(data => {
         resolve(data);
-        console.log("api said: " + JSON.stringify(data))
+        //console.log("api said: " + JSON.stringify(data))
       }, err => {
         console.log("Error fetching comment by ID: " + err.message);
       });
@@ -102,7 +102,7 @@ export class ApiProvider {
   incrementLike(id) {
 
       return new Promise((resolve, reject) => {
-        this.getCommentById(id).then((result) => {
+        this.getCommentById(id).then((result:any) => {
           result.likes += 1;
         return this.http.put<any[]>(url + "comments/" + id, result, {
           headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -119,7 +119,7 @@ export class ApiProvider {
 
   incrementDislike(id) {
       return new Promise((resolve, reject) => {
-        this.getCommentById(id).then((result) => {
+        this.getCommentById(id).then((result:any) => {
           result.dislikes += 1;
         return this.http.put(url + "comments/" + id, result, {
           headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -169,7 +169,7 @@ export class ApiProvider {
 
   setRandomColor(data){
     data.color = this.getRandomColor();
-    console.log(data.color)
+    //console.log(data.color)
     return data;
   }
 }
