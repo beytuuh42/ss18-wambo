@@ -13,7 +13,7 @@
     "lint": "ionic-app-scripts lint",
     "ionic:build": "ionic-app-scripts build",
     "ionic:serve": "ionic-app-scripts serve",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha",
     "start": "nodemon server.js"
   },
   "dependencies": {
@@ -48,8 +48,11 @@
   },
   "devDependencies": {
     "@ionic/app-scripts": "3.1.9",
+    "chai-http": "^4.0.0",
+    "nodemon": "^1.17.4",
     "typescript": "~2.6.2",
-    "nodemon": "^1.17.4"
+    "mocha": "^5.2.0",
+    "chai": "^4.1.2"
   },
   "description": "An Ionic project"
 }
