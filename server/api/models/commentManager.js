@@ -87,50 +87,78 @@ function deleteAllCommentsQuery() {
 // CREATE
 var createComment = function(req, res) {
   createCommentQuery(req.body).save(function(err, com) {
-    if (err)
-      throw err;
-    res.json(com);
+    if (err){
+      err.statuscode = '400'
+      res.json(err);
+    }
+    else{
+      res.json(com);
+    }
   });
 };
 
 //READ
 var getCommentById = function(req, res) {
   getCommentByIdQuery(req.params.commentId).exec(function(err, com) {
-    if (err)
-      throw err;
-    res.json(com);
-  });
-};
-var getAllComments = function(req, res) {
-  getAllCommentsQuery().exec(function(err, com) {
-    if (err) {
-      throw err;
-    } else {
+    if (err){
+      err.statuscode = '400'
+      res.json(err);
+    }
+    else{
       res.json(com);
     }
   });
 };
+
+var getAllComments = function(req, res) {
+  getAllCommentsQuery().exec(function(err, com) {
+    if (err){
+      err.statuscode = '400'
+      res.json(err);
+    }
+    else{
+      res.json(com);
+    }
+  });
+};
+
 var getUserTotalReceivedLikes = function(req, res) {
   getUserTotalReceivedLikesQuery(req.params.userId).exec(function(err,com){
-    if(err)
-      throw err;
-    res.json(com);
+    if (err){
+      err.statuscode = '400'
+      res.json(err);
+    }
+    else{
+      res.json(com);
+    }
   });
 };
+
+
 var getUserTotalReceivedDislikes = function(req, res) {
   getUserTotalReceivedDislikesQuery(req.params.userId).exec(function(err,com){
-    if(err)
-      throw err;
-    res.json(com);
+    if (err){
+      err.statuscode = '400'
+      res.json(err);
+    }
+    else{
+      res.json(com);
+    }
   });
 };
+
 var getUserTotalComments = function(req, res) {
   getUserTotalCommentsQuery(req.params.userId).exec(function(err,com){
-    if(err)
-      throw err;
-    res.json(com);
-  })
-}
+    if (err){
+      err.statuscode = '400'
+      res.json(err);
+    }
+    else{
+      res.json(com);
+    }
+  });
+};
+
 var getNestedCommentsByParentId = function(req, res) {
   var x = [];
   var curLength = 0;
@@ -173,26 +201,38 @@ var getNestedCommentsByParentId = function(req, res) {
 //UPDATE
 var setCommentById = function(req, res) {
   setCommentByIdQuery(req.params.commentId, req.body).exec(function(err, com) {
-    if (err)
+    if (err) {
       throw err;
-    res.json(com);
+    } else {
+      res.json(com);
+    }
   });
 };
 
+
 //DELETE
 var deleteAllComments = function(req, res) {
-  deleteAllCommentsQuery();
+  deleteAllCommentsQuery().exec(function(err, com){
+    if(err){
+      throw err
+    } else {
+      res.json(com)
+    }
+  });
   console.log("Deleted all comment entries");
 };
 
 var deleteCommentById = function(req, res) {
   getCommentByIdQuery(req.params.commentId).remove(function(err, com) {
-    if (err)
-      throw err;
-    console.log('Deleted!');
-    res.json(com);
+    if (err){
+      err.statuscode = '400'
+      res.json(err);
+    }
+    else{
+      res.json(com);
+    }
   });
-}
+};
 
 exports.createComment = createComment;
 exports.getCommentById = getCommentById;
