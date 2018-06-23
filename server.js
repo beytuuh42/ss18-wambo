@@ -5,6 +5,7 @@ var express = require('express'),
   Comment = require('./server/api/models/commentModel'),
   //Post = require('./server/api/models/postModel'),
   bp = require('body-parser');
+  module.exports = app
 
 
 //mongoose.Promise = global.Promise;
