@@ -214,7 +214,8 @@ var setCommentById = function(req, res) {
 var deleteAllComments = function(req, res) {
   deleteAllCommentsQuery().exec(function(err, com){
     if(err){
-      throw err
+      err.statuscode = '400'
+      res.json(err);
     } else {
       res.json(com)
     }

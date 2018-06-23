@@ -4,8 +4,8 @@ const chai = require('chai');
 const expect = require('chai').expect;
 chai.use(require('chai-http'));
 const app = require('../server.js'); // The server
-var model = require('../server/api/models/commentModel');
-var mongoose = require('mongoose');
+const model = require('../server/api/models/commentModel');
+const mongoose = require('mongoose');
 
 
 describe('API endpoint /comments', function() {
@@ -18,7 +18,6 @@ describe('API endpoint /comments', function() {
   });
 
   after(function() {
-    console.log(commentId);
     return chai.request(app)
       .delete('/api/comments/' + commentId)
       .then(function(res) {
@@ -26,8 +25,6 @@ describe('API endpoint /comments', function() {
         expect(res).to.have.status(200);
       });
   });
-
-
 
   // POST - Add new comment
   it('should add new post', function() {
@@ -40,7 +37,7 @@ describe('API endpoint /comments', function() {
       .then(function(res) {
         expect(res).to.have.status(200);
         expect(res).to.be.an('Object');
-        expect(res.body.content).to.equal('Hey guys');
+        expect(res.body.content).to.eql('Hey guys');
         commentId = res.body._id;
       })
   });
@@ -128,11 +125,11 @@ describe('API endpoint /comments/:commentId', function() {
       })
       .then(function(res) {
         expect(res).to.have.status(200);
-        expect(res).to.be.an('Object');
-        expect(res.body.content).to.equal('Hey guys');
-        expect(res.body._id).to.equal(commentId);
-        expect(res.body.likes).to.equal(1);
-        expect(res.body.dislikes).to.equal(1);
+        expect(res).to.be.json;
+        expect(res.body.content).to.eql('Hey guys');
+        expect(res.body._id).to.eql(commentId);
+        expect(res.body.likes).to.eql(1);
+        expect(res.body.dislikes).to.eql(1);
       });
   });
 
@@ -141,9 +138,9 @@ describe('API endpoint /comments/:commentId', function() {
     return chai.request(app)
       .delete('/api/comments/' + commentId)
       .then(function(res) {
-        console.log(res);
         expect(res).to.have.status(200);
-        expect(res).to.have.text('{"n":1,"ok":1}');
+        expect(res).to.be.json;
+        expect(res.body).to.eql({ n: 1, ok: 1 });
       })
 
   });
