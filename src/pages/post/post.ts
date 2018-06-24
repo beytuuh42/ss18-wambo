@@ -96,7 +96,7 @@ export class PostPage {
   getComments(){
     this.apiProvider.getAllChildrenByParent(this.post._id)
       .then(data => {
-        //console.log(data)
+        console.log(data)
         this.comments = this.apiProvider.setRandomColors(data);
       });
   }
