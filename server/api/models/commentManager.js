@@ -82,6 +82,7 @@ function deleteAllCommentsQuery() {
 var createComment = function(req, res) {
   createCommentQuery(req.body).save(function(err, com) {
     if (err){
+      err.statuscode = '400';
       res.json(err);
       return Promise.reject(new Error("Error creating comment in API: " + err.message));
     }
@@ -93,6 +94,7 @@ var createComment = function(req, res) {
 var getCommentById = function(req, res) {
   getCommentByIdQuery(req.params.commentId).exec(function(err, com) {
     if (err){
+      err.statuscode = '400';
       res.json(err);
       return Promise.reject(new Error("Error finding comment by id in API: " + err.message));
     }
@@ -102,6 +104,7 @@ var getCommentById = function(req, res) {
 var getAllComments = function(req, res) {
   getAllCommentsQuery().exec(function(err, com) {
     if (err){
+      err.statuscode = '400'
       res.json(err);
       return Promise.reject(new Error("Error fetching all comments in API: " + err.message));
     } else {
@@ -112,6 +115,7 @@ var getAllComments = function(req, res) {
 var getUserTotalReceivedLikes = function(req, res) {
   getUserTotalReceivedLikesQuery(req.params.userId).exec(function(err,com){
     if (err){
+      err.statuscode = '400';
       res.json(err);
       return Promise.reject(new Error("Error fetching total likes in API: " + err.message));
     }
@@ -121,6 +125,7 @@ var getUserTotalReceivedLikes = function(req, res) {
 var getUserTotalReceivedDislikes = function(req, res) {
   getUserTotalReceivedDislikesQuery(req.params.userId).exec(function(err,com){
     if (err){
+      err.statuscode = '400';
       res.json(err);
       return Promise.reject(new Error("Error fetching total dilikes in API: " + err.message));
     }
@@ -130,6 +135,7 @@ var getUserTotalReceivedDislikes = function(req, res) {
 var getUserTotalComments = function(req, res) {
   getUserTotalCommentsQuery(req.params.userId).exec(function(err,com){
     if (err){
+      err.statuscode = '400';
       res.json(err);
       return Promise.reject(new Error("Error fetching total comments in API: " + err.message));
     }
@@ -146,6 +152,7 @@ var getNestedCommentsByParentId = function(req, res) {
       Comment.find({ancestors: req.params.commentId}, {}, {$sort: {likes: 1}})
         .exec((err, com, next) => {
           if (err){
+            err.statuscode = '400';
             res.json(err);
             return Promise.reject(new Error("Error finding ancestors in API: " + err.message));
           }
@@ -158,6 +165,7 @@ var getNestedCommentsByParentId = function(req, res) {
           res.json(x);
         });
     }, (err) => {
+      err.statuscode = '400';
       res.json(err);
       return Promise.reject(new Error("Error fetching nested comments in API: " + err.message));
     });
@@ -177,6 +185,7 @@ var getNestedCommentsByParentId = function(req, res) {
 var setCommentById = function(req, res) {
   setCommentByIdQuery(req.params.commentId, req.body).exec(function(err, com) {
     if (err){
+      err.statuscode = '400';
       res.json(err);
       return Promise.reject(new Error("Error changing comment by ID in API: " + err.message));
     }
@@ -188,6 +197,7 @@ var setCommentById = function(req, res) {
 var deleteAllComments = function(req, res) {
   deleteAllCommentsQuery().exec(function(err, com){
     if (err){
+      err.statuscode = '400';
       res.json(err);
       return Promise.reject(new Error("Error deleting all comments in API: " + err.message));
     }
@@ -198,6 +208,7 @@ var deleteAllComments = function(req, res) {
 var deleteCommentById = function(req, res) {
   getCommentByIdQuery(req.params.commentId).remove(function(err, com) {
     if (err){
+      err.statuscode = '400';
       res.json(err);
       return Promise.reject(new Error("Error deleting comment by ID in API: " + err.message));
     }
