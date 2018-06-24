@@ -64,15 +64,17 @@ var getAllUsers = function(req, res) {
   });
 };
 
-var getUserByEmail = function(req, res) {
-  getUserByEmailQuery(req.params.email).exec(function(err, com) {
+var getUserByUsername = function(req, res) {
+  getUserByUsernameQuery(req.params.username).exec(function(err, com) {
     if (err || com === null){
-      res.status(404).send(req.params.email + " not found");
-    }else{
-    res.json(com);
+      res.statusCode = 404;
+      res.status(404).send(req.params.username + " not found");
+      res.json();
     }
+    
+    res.json(com);
   });
-};
+}
 
 
 
