@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { App, NavController } from 'ionic-angular';
 import { AuthService } from '../../providers/auth-service/auth-service'
 import { UserController } from '../../providers/api/userController'
 import { LoginPage } from '../login/login'
@@ -16,7 +16,7 @@ author:number;
 comments:number;
 info:any;
 
-  constructor(public navCtrl: NavController, private auth: AuthService, public userController:UserController) {
+  constructor(public navCtrl: NavController, private auth: AuthService, public userController:UserController, public appCtrl: App) {
 
   }
 
@@ -26,12 +26,16 @@ info:any;
 
   doRefresh(refresher) {
     console.log('Begin async operation', refresher);
-    this.auth.setUserInfo().then(loaded => {
-      if(loaded){
+    // this.auth.setUserInfo().then(loaded => {
+    //   if(loaded){
+    //     this.info = this.auth.getUserInfo();
+    //     this.refreshData(this.info._id);
+    //   }
+    // });
+    console.log(this.info);
         this.info = this.auth.getUserInfo();
         this.refreshData(this.info._id);
-      }
-    });
+
     setTimeout(() => {
       if (refresher) refresher.complete();
     }, 100);
@@ -39,10 +43,9 @@ info:any;
 
   public logout() {
     this.auth.logout().then(succ => {
-      localStorage.removeItem("username");
-      localStorage.removeItem("pw");
-      this.navCtrl.popToRoot();
-      this.navCtrl.push(LoginPage);
+      localStorage.removeItem("tokenId");
+      this.appCtrl.getRootNav().push(LoginPage);
+
     });
   }
 

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { UserController } from '../api/userController';
-import { PasswordHandler } from '../../utils/passwordHandler';
 
 export class User {
   _id: any;
@@ -16,7 +15,6 @@ export class User {
 @Injectable()
 export class AuthService {
   currentUser: User;
-  pwHandler:PasswordHandler;
   exists:Boolean;
   user = localStorage.getItem('username');
   pw = localStorage.getItem('pw');
@@ -30,22 +28,15 @@ export class AuthService {
       return Promise.reject(new Error("Please insert credentials"));
     } else {
       return new Promise((resolve, reject) => {
-        this.userController.getUserByUsername(credentials.username)
+        this.userController.login(credentials.username,credentials.password)
           .then((data:any) => {
-            if(data == null){
-              resolve(false);
-            } else {
-              this.pwHandler = new PasswordHandler(credentials.password, data.password);
-              let access = this.pwHandler.isValidPassword();
-              this.currentUser = new User(data._id, data.username);
-              console.log(this.currentUser);
-              resolve(access);
+            if(data.success) {
+              this.storeSession(data.token);
+              resolve(true);
             }
+            reject(false);
           })
-          .catch(err => {
-            reject(new Error("Error signing in: " + err.message));
-          })
-        })
+      })
       }
   }
 
@@ -75,10 +66,10 @@ export class AuthService {
     return this.currentUser;
   }
 
-  public setUserInfo(){
+  public setUserInfo(user){
     return new Promise((resolve, reject)=>{
-      if(this.user && this.pw){
-        this.userController.getUserByUsername(this.user)
+      if(user){
+        this.userController.getUserByUsername(user)
           .then((data:any) => {
             this.currentUser = new User(data._id,data.username);
             resolve(true);
@@ -109,5 +100,10 @@ export class AuthService {
       .catch(err => {
         return Promise.reject(new Error("User exists: " + err.message));
       })
+  }
+
+  storeSession(token){
+    localStorage.setItem('tokenId', token);
+    //localStorage.setItem('user', authResult.user);
   }
 }

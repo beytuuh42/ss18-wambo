@@ -1,7 +1,7 @@
 import { Component } from '@angular/core'
 import { ModalController, NavController, AlertController, Platform } from 'ionic-angular'
 import { Storage } from '@ionic/storage';
-
+import { verifyToken } from '../../utilities/verifyToken'
 import { PostPage } from '../post/post'
 import { ApiProvider } from '../../providers/api/api'
 import { AddPostPage } from '../add-post/add-post'
@@ -20,6 +20,7 @@ export class HomePage {
     content: ''
   }
   val = 10;
+  userId:number
   // colors: Array<string> = ['#d5e5ff', '#ffd5ee', '#d5ffe6', '#d5e5ff', '#d5fff7']
 
   constructor(public modalCtrl: ModalController,
@@ -31,11 +32,13 @@ export class HomePage {
               public auth: AuthService,
               platform: Platform) {
     platform.registerBackButtonAction(() => {
+
       //console.log("backPressed 1");
     }, 1);
   }
 
   ionViewWillEnter(){
+    verifyToken(this);
     this.doRefresh(null);
   }
 
@@ -94,9 +97,18 @@ export class HomePage {
         {
           text: 'Delete',
           handler: () => {
-            this.delete(post);
-            this.doRefresh(null);
-            console.log('Post deleted');
+            if(post.author == this.auth.currentUser._id){
+              this.delete(post);
+              console.log('Post deleted');
+              this.doRefresh(null);
+            } else {
+              let innerAlert = this.alertCtrl.create({
+                title: 'Fail',
+                subTitle: "You can only delete your own posts",
+                buttons: ['OK']
+              });
+              innerAlert.present();
+            }
           }
         }
       ]
@@ -121,7 +133,7 @@ export class HomePage {
   }
 
   incrementLike(post) {
-    this.apiProvider.incrementLike(post._id).then((result:any) => {
+    this.apiProvider.incrementLike(post._id, this.userId).then((result:any) => {
       post.likes = result.body.likes;
       // this.posts.find(x => x._id === post._id).likes = result.body.likes;
     }, (err) => {
@@ -130,11 +142,12 @@ export class HomePage {
   }
 
   incrementDislike(post) {
-    this.apiProvider.incrementDislike(post._id).then((result:any) => {
+    this.apiProvider.incrementDislike(post._id, this.userId).then((result:any) => {
         post.dislikes = result.body.dislikes;
       // this.posts.find(x => x._id === post._id).dislikes = result.body.dislikes;
     }, (err) => {
       Promise.reject(new Error("Error incremending dislike: " + err.message));
     });
   }
+
 }

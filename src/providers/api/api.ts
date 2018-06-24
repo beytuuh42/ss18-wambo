@@ -71,14 +71,14 @@ export class ApiProvider {
 
   sendPost(data) {
     return new Promise((resolve,reject) => {
-      this.authService.setUserInfo()
-        .then(loaded => {
-          if(loaded){
-            return this.authService.getUserInfo()._id;
-          }
-        })
-        .then(author => {
-          data.author = author;
+      // this.authService.setUserInfo()
+      //   .then(loaded => {
+      //     if(loaded){
+      //       return this.authService.getUserInfo()._id;
+      //     }
+      //   })
+      //   .then(author => {
+          data.author = this.authService.getUserInfo()._id;// author;
           path = url + prefixComments;
 
           return this.http.post(path, data, {
@@ -91,10 +91,10 @@ export class ApiProvider {
               reject(new Error("Error pushing new post (subscribing data): " + err.message));
             });
         })
-        .catch(err => {
-          reject(new Error("Error pushing new post (fetching author ID): " + err.message));
-        })
-    })
+    //     .catch(err => {
+    //       reject(new Error("Error pushing new post (fetching author ID): " + err.message));
+    //     })
+    // })
   }
 
   pushAncestors(result, ancestors) {
@@ -122,38 +122,53 @@ export class ApiProvider {
     });
   }
 
-  incrementLike(id) {
-    path = url + prefixComments + id;
+  incrementLike(commentId, userId) {
+    path = url + prefixComments + commentId;
     return new Promise((resolve, reject) => {
-      this.getCommentById(id).then((result: any) => {
-        result.likes += 1;
-        return this.http.put<any[]>(path, result, {
-          headers: jsonHeader,
-          observe: 'response'
+      this.getCommentById(commentId).then((result: any) => {
+        this.checkIfUserLikeExists(result,userId,"like").then(exists => {
+          if(exists){
+            return false;
+          } else {
+            result.liked_by.push(userId);
+            result.likes += 1;
+            console.log(result);
+            return this.http.put<any[]>(path, result, {
+              headers: jsonHeader,
+              observe: 'response'
+            })
+              .subscribe(res => {
+                resolve(res);
+              }, (err) => {
+                reject(new Error("Error incrementing like: " + err.message));
+              });
+          }
         })
-          .subscribe(res => {
-            resolve(res);
-          }, (err) => {
-            reject(new Error("Error incrementing like: " + err.message));
-          });
       });
     });
   }
 
-  incrementDislike(id) {
-    path = url + prefixComments + id;
+  incrementDislike(commentId, userId) {
+    path = url + prefixComments + commentId;
     return new Promise((resolve, reject) => {
-      this.getCommentById(id).then((result: any) => {
-        result.dislikes += 1;
-        return this.http.put(path, result, {
-          headers: jsonHeader,
-          observe: 'response'
+      this.getCommentById(commentId).then((result: any) => {
+        this.checkIfUserLikeExists(result,userId,"dislike").then(exists => {
+          if(exists){
+            return false;
+          } else {
+            result.disliked_by.push(userId);
+            result.dislikes += 1;
+            return this.http.put<any[]>(path, result, {
+              headers: jsonHeader,
+              observe: 'response'
+            })
+              .subscribe(res => {
+                resolve(res);
+              }, (err) => {
+                reject(new Error("Error incrementing like: " + err.message));
+              });
+          }
         })
-          .subscribe(res => {
-            resolve(res);
-          }, (err) => {
-            reject(new Error("Error incrementing dislike: " + err.message));
-          });
       });
     });
   }
@@ -201,5 +216,25 @@ export class ApiProvider {
   setRandomColor(data) {
     data.color = this.getRandomColor();
     return data;
+  }
+
+  checkIfUserLikeExists(result,userId,like):Promise<Boolean>{
+    return new Promise((resolve,reject) => {
+      var list;
+      if(like == "like"){
+        list = result.liked_by;
+      } else {
+        list = result.disliked_by;
+      }
+      if(typeof list != 'undefined' && list instanceof Array){
+        list.forEach((x:any) => {
+          if(x == userId){
+            resolve(true);
+          }
+        });
+      }
+      resolve(false);
+    })
+
   }
 }

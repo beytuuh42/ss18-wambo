@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { PasswordHandler } from '../../utils/passwordHandler';
+
 
 let url = "proxy/";
 let prefixUsers = "users/";
@@ -13,7 +13,6 @@ let jsonHeader = new HttpHeaders({ 'Content-Type': 'application/json' });
 
 @Injectable()
 export class UserController {
-pwHandler:PasswordHandler
 
   constructor(public http: HttpClient) { }
 
@@ -64,17 +63,40 @@ pwHandler:PasswordHandler
   getUserByUsername(username) {
     path = url + prefixUsernames + username;
     return new Promise((resolve,reject) => {
-      this.http.get<any[]>(path).subscribe(data => {
-        resolve(data);
-      }, err => {
-        reject(new Error("Error fetching user by username: " + err.message));
-      });
+      // this.http.get<any[]>(path).subscribe(data => {
+      //   console.log(data);
+      //   resolve(data);
+      // }, err => {
+      //   reject(new Error("Error fetching user by username: " + err.message));
+      // });
+      return this.http.get<any[]>(path, {
+        headers:jsonHeader,
+        observe: 'response',
+        withCredentials: true
+      })
+        .subscribe(res => {
+          resolve(res.body);
+        }, (err) => {
+          reject(new Error("Error creating user: " + err.message));
+        });
     });
   }
 
+  login(username:string,password:string){
+    path = url + "/login";
+    return new Promise((resolve, reject) => {
+      return this.http.post<any>(path,{username,password})
+        .subscribe(data => {
+          resolve(data);
+        }, err => {
+          reject(new Error("Error resolving login request: " + err.message));
+        })
+    })
+
+  }
+
   createUser(data) {
-    this.pwHandler = new PasswordHandler(data.password, null);
-    data.password = this.pwHandler.encryptPassword();
+
     path = url + prefixUsers;
     return new Promise((resolve, reject) => {
       return this.http.post(path, data, {
@@ -82,6 +104,7 @@ pwHandler:PasswordHandler
         observe: 'response'
       })
         .subscribe(res => {
+          console.log(res);
           resolve(res);
         }, (err) => {
           reject(new Error("Error creating user: " + err.message));

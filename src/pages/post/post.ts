@@ -3,6 +3,8 @@ import { IonicPage, NavParams, Platform, NavController, ModalController, AlertCo
 import { ApiProvider } from '../../providers/api/api'
 import { UserController } from '../../providers/api/userController'
 import { AddPostPage } from '../add-post/add-post'
+import { AuthService } from '../../providers/auth-service/auth-service'
+import { verifyToken } from '../../utilities/verifyToken'
 
 @IonicPage()
 @Component({
@@ -15,9 +17,10 @@ export class PostPage {
   comment = { content: '' };
   comments: Array<any> = [];
   id:String;
+  userId:number
 
   constructor(public apiProvider: ApiProvider, public params: NavParams, platform: Platform, public navCtrl: NavController, public modalCtrl: ModalController, public alertCtrl: AlertController,
-  public userController: UserController) {
+  public userController: UserController, public auth: AuthService) {
     this.id = params.get('post');
     // this.getPostById(this.id);
     let backAction = platform.registerBackButtonAction(() => {
@@ -28,6 +31,7 @@ export class PostPage {
   }
 
   ionViewWillEnter(){
+    verifyToken(this);
     this.doRefresh(null);
   }
 
@@ -76,7 +80,7 @@ export class PostPage {
   }
 
   incrementLike(comment) {
-    this.apiProvider.incrementLike(comment._id).then((result:any) => {
+    this.apiProvider.incrementLike(comment._id, this.userId).then((result:any) => {
       comment.likes = result.body.likes;
     }, (err) => {
       Promise.reject(new Error("Error incremending like: " + err.message));
@@ -84,7 +88,7 @@ export class PostPage {
   }
 
   incrementDislike(comment) {
-    this.apiProvider.incrementDislike(comment._id).then((result:any) => {
+    this.apiProvider.incrementDislike(comment._id, this.userId).then((result:any) => {
       comment.dislikes = result.body.dislikes;
     }, (err) => {
       Promise.reject(new Error("Error incremending dilike: " + err.message));
@@ -139,7 +143,19 @@ export class PostPage {
         {
           text: 'Delete',
           handler: () => {
-            this.delete(post);
+            if(post.author == this.auth.currentUser._id){
+              //this.delete(post);
+              console.log('Post deleted');
+              this.doRefresh(null);
+            } else {
+              let innerAlert = this.alertCtrl.create({
+                title: 'Fail',
+                subTitle: "You can only delete your own posts",
+                buttons: ['OK']
+              });
+              innerAlert.present();
+              this.doRefresh(null);
+            }
             if(post._id == this.id){
               this.navCtrl.pop();
             }
