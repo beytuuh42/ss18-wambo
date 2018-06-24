@@ -144,7 +144,7 @@ export class PostPage {
           text: 'Delete',
           handler: () => {
             if(post.author == this.auth.currentUser._id){
-              //this.delete(post);
+              this.delete(post);
               console.log('Post deleted');
               this.doRefresh(null);
             } else {
