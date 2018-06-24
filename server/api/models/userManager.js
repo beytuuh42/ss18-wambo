@@ -34,8 +34,9 @@ function deleteAllUsersQuery() {
 // CREATE
 var createUser = function(req, res) {
   createUserQuery(req.body).save(function(err, com) {
-    if (err)
-      throw err;
+    if (err){
+        res.json(err)
+    }
     res.statusCode = 201;
     res.json(com);
   });
@@ -56,12 +57,11 @@ var getAllUsers = function(req, res) {
   getAllUsersQuery().exec(function(err, com) {
     if (err || com === null){
       res.statusCode = 404;
-      // res.statusMessage =  "no users found"
-      res.json();
+      //res.statusMessage =  "no users found"
+      res.json(err);
     }else{
     res.json(com);
     }
-    res.json(com)
   });
 };
 
@@ -70,9 +70,8 @@ var getUserByUsername = function(req, res) {
     if (err || com === null){
       res.statusCode = 404;
       res.status(404).send(req.params.username + " not found");
-      res.json();
+      res.json(err);
     }
-    
     res.json(com);
   });
 }
