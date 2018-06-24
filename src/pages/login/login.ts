@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { NavController, AlertController, LoadingController, Loading, IonicPage } from 'ionic-angular';
 import { AuthService } from '../../providers/auth-service/auth-service'
 import { TabsPage } from '../tabs-page/tabs-page'
-import { HomePage } from '../home/home'
+import { RegisterPage } from '../register/register'
 
 @IonicPage()
 @Component({
@@ -11,18 +11,21 @@ import { HomePage } from '../home/home'
 })
 export class LoginPage {
   loading: Loading;
-  registerCredentials = { email: '', password: '' };
+  registerCredentials = { username: '', password: '' };
+  myStorage = window.localStorage;
+  constructor(private nav: NavController, private auth: AuthService, private alertCtrl: AlertController, private loadingCtrl: LoadingController) {
 
-  constructor(private nav: NavController, private auth: AuthService, private alertCtrl: AlertController, private loadingCtrl: LoadingController) {  }
+  }
 
   public createAccount() {
-    this.nav.push('RegisterPage');
+    this.nav.push(RegisterPage);
   }
 
   public login() {
     this.showLoading()
-    this.auth.login(this.registerCredentials).subscribe(allowed => {
+    this.auth.login(this.registerCredentials).then(allowed => {
       if (allowed) {
+        this.storeLogin();
         this.nav.setRoot(TabsPage);
       } else {
         this.showError("Access Denied");
@@ -51,4 +54,10 @@ export class LoginPage {
     });
     alert.present();
   }
+
+  storeLogin(){
+    localStorage.setItem('username', this.registerCredentials.username);
+    localStorage.setItem('pw', this.registerCredentials.password);
+  }
+
 }

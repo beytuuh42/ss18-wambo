@@ -4,7 +4,7 @@ import { PasswordHandler } from '../../utils/passwordHandler';
 
 let url = "proxy/";
 let prefixUsers = "users/";
-let prefixEmails = "emails/";
+let prefixUsernames = "usernames/";
 let suffixLikes = "/likes/"
 let suffixDislikes = "/dislikes/"
 let suffixComments = "/comments/"
@@ -17,14 +17,24 @@ pwHandler:PasswordHandler
 
   constructor(public http: HttpClient) { }
 
+  getUserById(id) {
+    path = url + prefixUsers + id;
+    return new Promise((resolve,reject) => {
+      this.http.get<any[]>(path).subscribe(data => {
+        resolve(data);
+      }, err => {
+        reject(new Error("Error fetching user by username: " + err.message));
+      });
+    });
+  }
+
   getUserTotalReceivedLikes(id){
     path = url + prefixUsers + id + suffixLikes;
     return new Promise((resolve,reject) => {
       this.http.get(path).subscribe(data => {
         resolve(data);
       }, err => {
-        console.log("Error fetching like amount: " + err.message);
-        reject(err);
+        reject(new Error("Error fetching like amount: " + err.message));
       });
     });
   }
@@ -35,8 +45,7 @@ pwHandler:PasswordHandler
       this.http.get(path).subscribe(data => {
         resolve(data);
       }, err => {
-        console.log("Error fetching dislike amount: " + err.message);
-        reject(err);
+        reject(new Error("Error fetching dislike amount: " + err.message));
       });
     });
   }
@@ -47,20 +56,18 @@ pwHandler:PasswordHandler
       this.http.get(path).subscribe(data => {
         resolve(data);
       }, err => {
-        console.log("Error fetching comment amount: " + err.message);
-        reject(err);
+        reject(new Error("Error fetching comment amount: " + err.message));
       })
     })
   }
 
-  getUserByEmail(email) {
-    path = url + prefixEmails + email;
+  getUserByUsername(username) {
+    path = url + prefixUsernames + username;
     return new Promise((resolve,reject) => {
       this.http.get<any[]>(path).subscribe(data => {
         resolve(data);
       }, err => {
-        console.log("Error fetching user by Email: " + err.message);
-        reject(err);
+        reject(new Error("Error fetching user by username: " + err.message));
       });
     });
   }
@@ -68,7 +75,6 @@ pwHandler:PasswordHandler
   createUser(data) {
     this.pwHandler = new PasswordHandler(data.password, null);
     data.password = this.pwHandler.encryptPassword();
-    console.log(data.password);
     path = url + prefixUsers;
     return new Promise((resolve, reject) => {
       return this.http.post(path, data, {
@@ -78,8 +84,7 @@ pwHandler:PasswordHandler
         .subscribe(res => {
           resolve(res);
         }, (err) => {
-          console.log("Error creating user: " + err.message);
-          reject(err);
+          reject(new Error("Error creating user: " + err.message));
         });
     });
   }

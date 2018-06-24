@@ -32,4 +32,4 @@ app.use(function(req, res) {
 
 app.listen(port);
 
-console.log('Lets fucking go DUDE');
+console.log('Starting application..');

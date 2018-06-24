@@ -5,8 +5,8 @@ import { Storage } from '@ionic/storage';
 import { PostPage } from '../post/post'
 import { ApiProvider } from '../../providers/api/api'
 import { AddPostPage } from '../add-post/add-post'
-import { TabsPage } from '../tabs-page/tabs-page'
 import { AuthService } from '../../providers/auth-service/auth-service'
+import { UserController } from '../../providers/api/userController'
 
 @Component({
   selector: 'page-home',
@@ -25,14 +25,14 @@ export class HomePage {
   constructor(public modalCtrl: ModalController,
               public navCtrl: NavController,
               public apiProvider: ApiProvider,
+              public userController: UserController,
               public alertCtrl: AlertController,
               public storage: Storage,
+              public auth: AuthService,
               platform: Platform) {
-    //let authInfo = this.auth.getUserInfo()
     platform.registerBackButtonAction(() => {
       //console.log("backPressed 1");
     }, 1);
-    this.getPosts();
   }
 
   ionViewWillEnter(){
@@ -42,7 +42,6 @@ export class HomePage {
   delete(post) {
     this.apiProvider.deletePostById(post._id)
     .then(data => {
-      this.getPosts();
       console.log("deletePostById said: " + data);
     })
   }
@@ -57,7 +56,7 @@ export class HomePage {
 
   getPosts() {
     this.apiProvider.getPosts()
-      .then(data => {
+      .then((data:any) => {
         this.posts = this.apiProvider.setRandomColors(data);
       })
   }
@@ -115,10 +114,9 @@ export class HomePage {
   sendPost() {
     this.apiProvider.sendPost(this.message).then((result:any) => {
       this.apiProvider.pushAncestors(result, result.body.ancestors).then((abc) => {
-        //console.log(result);
       })
     }, (err) => {
-      console.log("Error sending post: " + err.message);
+      Promise.reject(new Error("Error sending post: " + err.message));
     });
   }
 
@@ -127,7 +125,7 @@ export class HomePage {
       post.likes = result.body.likes;
       // this.posts.find(x => x._id === post._id).likes = result.body.likes;
     }, (err) => {
-      console.log("Error incremending like: " + err.message);
+      Promise.reject(new Error("Error incremending like: " + err.message));
     });
   }
 
@@ -136,7 +134,7 @@ export class HomePage {
         post.dislikes = result.body.dislikes;
       // this.posts.find(x => x._id === post._id).dislikes = result.body.dislikes;
     }, (err) => {
-      console.log("Error sending post: " + err.message);
+      Promise.reject(new Error("Error incremending dislike: " + err.message));
     });
   }
 }

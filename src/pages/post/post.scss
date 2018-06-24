@@ -3,7 +3,6 @@ page-post {
     padding-top: 10px;
     margin:auto;
     width:  90%;
-
   }
 
   ion-item {
@@ -13,5 +12,14 @@ page-post {
       color: color($colors, dark) !important;
       margin-bottom: 45px !important;
     }
+  }
+
+  .commentHeader {
+    font-size: 1.2rem !important;
+    margin-bottom: 10px !important;
+  }
+
+  #commentDeleteButton {
+    margin-top: 10px;
   }
 }

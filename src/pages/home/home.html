@@ -16,7 +16,8 @@
   <ion-list>
     <ion-item-sliding *ngFor="let post of posts">
       <ion-item class="warpper" [ngStyle]="{'background-color': post.color}" id="{{post._id}}">
-        <p text-wrap>{{post.content}}</p>
+        <p text-wrap *ngIf="post.content=='[deleted]'" style="font-style:italic;">{{post.content}}</p>
+        <p text-wrap *ngIf="post.content!='[deleted]'">{{post.content}}</p>
         <ion-footer>
           <ion-row>
             <ion-col>

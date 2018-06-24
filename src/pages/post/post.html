@@ -6,7 +6,7 @@
 
   <ion-navbar>
     <ion-title>
-      {{post.content}}
+      <p>Comments</p>
     </ion-title>
   </ion-navbar>
 
@@ -20,7 +20,9 @@
 
     <ion-item-sliding>
       <ion-item id="{{post._id}}" [ngStyle]="{'background-color': post.color}">
-        <p text-wrap>{{post.content}}</p>
+        <div class="commentHeader">{{post.username}}</div>
+        <p text-wrap *ngIf="post.content=='[deleted]'" style="font-style:italic;">{{post.content}}</p>
+        <p text-wrap *ngIf="post.content!='[deleted]'">{{post.content}}</p>
         <ion-footer>
           <ion-row>
             <ion-col>
@@ -78,7 +80,9 @@
     <!-- </ion-card> -->
     <ion-item-sliding class="secondLevel" *ngFor="let comment of comments">
       <ion-item class="warpper" [ngStyle]="{'background-color': comment.color}" id="{{comment._id}}">
-        <p text-wrap>{{comment.content}}</p>
+        <div class="commentHeader">{{comment.username}}</div>
+        <p text-wrap *ngIf="comment.content=='[deleted]'" style="font-style:italic;">{{comment.content}}</p>
+        <p text-wrap *ngIf="comment.content!='[deleted]'">{{comment.content}}</p>
         <ion-footer>
           <ion-row>
             <ion-col>
@@ -103,7 +107,7 @@
         </ion-footer>
       </ion-item>
       <ion-item-options side="right">
-        <button ion-button (click)="presendDelete(comment)">delete</button>
+        <button ion-button (click)="presendDelete(comment)" id ="commentDeleteButton">delete</button>
       </ion-item-options>
     </ion-item-sliding>
   </ion-list>

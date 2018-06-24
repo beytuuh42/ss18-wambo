@@ -15,8 +15,8 @@ function createUserQuery(body) {
 function getUserByIdQuery(_id) {
   return User.findById(_id);
 };
-function getUserByEmailQuery(email) {
-  return User.findOne({'email':email});
+function getUserByUsernameQuery(username) {
+  return User.findOne({'username':username});
 }
 
 function getAllUsersQuery() {
@@ -61,6 +61,7 @@ var getAllUsers = function(req, res) {
     }else{
     res.json(com);
     }
+    res.json(com)
   });
 };
 
@@ -82,17 +83,19 @@ var getUserByUsername = function(req, res) {
 
 var deleteUserById = function(req, res) {
   getUserByIdQuery(req.params.userId).remove(function(err, com) {
-    if (err)
-      throw err;
-    console.log('Deleted!');
+    if (err){
+      res.json(err);
+      return Promise.reject(new Error("Error deleting user by ID in API: " + err.message));
+    }
     res.json(com);
   });
 }
 var deleteAllUsers = function(req, res) {
   deleteAllUsersQuery().exec(function(err, com){
-    if (err)
-      throw err;
-      console.log("Deleted all user entries");
+    if (err){
+      res.json(err);
+      return Promise.reject(new Error("Error deleting all  users in API: " + err.message));
+    }
     res.json(com);
   });
 };
@@ -100,6 +103,6 @@ var deleteAllUsers = function(req, res) {
 exports.createUser = createUser;
 exports.getAllUsers = getAllUsers;
 exports.getUserById = getUserById;
-exports.getUserByEmail = getUserByEmail;
+exports.getUserByUsername = getUserByUsername;
 exports.deleteUserById = deleteUserById;
 exports.deleteAllUsers = deleteAllUsers;

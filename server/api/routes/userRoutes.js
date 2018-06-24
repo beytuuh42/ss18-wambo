@@ -11,7 +11,7 @@ module.exports = function(app) {
     //.put(userManager.setUserById)
     .delete(userManager.deleteUserById);
 
-  app.route('/api/emails/:email')
-    .get(userManager.getUserByEmail);
+  app.route('/api/usernames/:username')
+    .get(userManager.getUserByUsername);
 
 };
