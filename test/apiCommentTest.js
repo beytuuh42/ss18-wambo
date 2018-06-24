@@ -31,7 +31,6 @@ describe('API endpoint /comments', function() {
     });
   });
 
-
   // POST - Add new comment
   it('should add new post', function() {
     return chai.request(app)
@@ -90,6 +89,8 @@ describe('API endpoint /comments', function() {
   });
 });
 
+
+//Tesing api endpoint /comments/:commentId
 describe('API endpoint /comments/:commentId', function() {
   var commentId = new mongoose.Types.ObjectId('111111111111111111111111');
   var commentLikes;
@@ -101,15 +102,22 @@ describe('API endpoint /comments/:commentId', function() {
     author: new mongoose.Types.ObjectId('211111111111111111111111')
   });
 
+  // How long to wait for a response
+  this.timeout(5000);
 
+  before(function(done){
+    testComment.save(function(err, com) {
+      if (err)
+        throw err;
+    });
+    done();
+  });
 
-  this.timeout(5000); // How long to wait for a response (ms)
-
-  before(function(){
-        testComment.save(function(err, com) {
-          if (err)
-            throw err;
-        });
+  after(function(done){
+    Comment.remove({}, function(err) {
+       console.log('collection removed')
+       done();
+    });
   });
 
   // Get Comment by id
@@ -235,34 +243,3 @@ after(function(done){
 
   });
 });
-
-
-//
-// module.exports = function(app) {
-//   var commentManager = require('../models/commentManager');
-//
-//   app.route('/api/comments')
-//     .get(commentManager.getAllComments)
-//     .post(commentManager.createComment)
-//     .delete(commentManager.deleteAllComments); //delete all is never used
-//
-//   app.route('/api/comments/:commentId')
-//     .get(commentManager.getCommentById)
-//     .put(commentManager.setCommentById)
-//     .delete(commentManager.deleteCommentById);
-//
-//   app.route('/api/nested/:commentId')
-//     .get(commentManager.getNestedCommentsByParentId);
-//
-//   // app.route('/api/test/:commentId')
-//   //   .get(commentManager.getAllParentsById);
-//
-//   app.route('/api/users/:userId/likes')
-//     .get(commentManager.getUserTotalReceivedLikes);
-//
-//   app.route('/api/users/:userId/dislikes')
-//     .get(commentManager.getUserTotalReceivedDislikes);
-//
-//     app.route('/api/users/:userId/comments')
-//       .get(commentManager.getUserTotalComments);
-// };

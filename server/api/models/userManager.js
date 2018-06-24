@@ -36,6 +36,7 @@ var createUser = function(req, res) {
   createUserQuery(req.body).save(function(err, com) {
     if (err)
       throw err;
+    res.statusCode = 201;
     res.json(com);
   });
 };
@@ -43,28 +44,36 @@ var createUser = function(req, res) {
 // READ
 var getUserById = function(req, res) {
   getUserByIdQuery(req.params.userId).exec(function(err, com) {
-    if (err)
-      throw err;
+    if (err || com === null){
+      res.status(404).send(req.params.userId + " not found");
+    }else{
     res.json(com);
+    }
   });
 };
+
 var getAllUsers = function(req, res) {
   getAllUsersQuery().exec(function(err, com) {
-    if (err) {
-      throw err;
-    } else {
-      res.json(com);
+    if (err || com === null){
+      res.statusCode = 404;
+      // res.statusMessage =  "no users found"
+      res.json();
+    }else{
+    res.json(com);
     }
   });
 };
 
 var getUserByEmail = function(req, res) {
   getUserByEmailQuery(req.params.email).exec(function(err, com) {
-    if (err)
-      throw err;
+    if (err || com === null){
+      res.status(404).send(req.params.email + " not found");
+    }else{
     res.json(com);
+    }
   });
-}
+};
+
 
 
 // DELETE
