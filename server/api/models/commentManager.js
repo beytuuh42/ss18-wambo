@@ -16,13 +16,7 @@ function getCommentByIdQuery(_id) {
 };
 
 function getNestedCommentSorted(value, _id, sortBy) {
-  return Comment.find({
-    value: _id
-  }, {}, {
-    $sort: {
-      sortBy: 1
-    }
-  });
+  return Comment.find({value: _id}, {}, {$sort: {sortBy: 1}});
 }
 
 function getAllCommentsQuery() {
@@ -76,7 +70,7 @@ function setCommentByIdQuery(_id, body) {
 
 // DELETE
 function deleteAllCommentsQuery() {
-  return Comment.collection.drop();
+  return Comment.remove({});
 };
 
 
@@ -87,8 +81,10 @@ function deleteAllCommentsQuery() {
 // CREATE
 var createComment = function(req, res) {
   createCommentQuery(req.body).save(function(err, com) {
-    if (err)
-      throw err;
+    if (err){
+      res.json(err);
+      return Promise.reject(new Error("Error creating comment in API: " + err.message));
+    }
     res.json(com);
   });
 };
@@ -96,15 +92,18 @@ var createComment = function(req, res) {
 //READ
 var getCommentById = function(req, res) {
   getCommentByIdQuery(req.params.commentId).exec(function(err, com) {
-    if (err)
-      throw err;
+    if (err){
+      res.json(err);
+      return Promise.reject(new Error("Error finding comment by id in API: " + err.message));
+    }
     res.json(com);
   });
 };
 var getAllComments = function(req, res) {
   getAllCommentsQuery().exec(function(err, com) {
-    if (err) {
-      throw err;
+    if (err){
+      res.json(err);
+      return Promise.reject(new Error("Error fetching all comments in API: " + err.message));
     } else {
       res.json(com);
     }
@@ -112,22 +111,28 @@ var getAllComments = function(req, res) {
 };
 var getUserTotalReceivedLikes = function(req, res) {
   getUserTotalReceivedLikesQuery(req.params.userId).exec(function(err,com){
-    if(err)
-      throw err;
+    if (err){
+      res.json(err);
+      return Promise.reject(new Error("Error fetching total likes in API: " + err.message));
+    }
     res.json(com);
   });
 };
 var getUserTotalReceivedDislikes = function(req, res) {
   getUserTotalReceivedDislikesQuery(req.params.userId).exec(function(err,com){
-    if(err)
-      throw err;
+    if (err){
+      res.json(err);
+      return Promise.reject(new Error("Error fetching total dilikes in API: " + err.message));
+    }
     res.json(com);
   });
 };
 var getUserTotalComments = function(req, res) {
   getUserTotalCommentsQuery(req.params.userId).exec(function(err,com){
-    if(err)
-      throw err;
+    if (err){
+      res.json(err);
+      return Promise.reject(new Error("Error fetching total comments in API: " + err.message));
+    }
     res.json(com);
   })
 }
@@ -138,16 +143,13 @@ var getNestedCommentsByParentId = function(req, res) {
   getCommentByIdQuery(req.params.commentId)
     .then((com) => {
       curLength = com.ancestors.length;
-      Comment.find({
-          ancestors: req.params.commentId
-        }, {}, {
-          $sort: {
-            likes: 1
+      Comment.find({ancestors: req.params.commentId}, {}, {$sort: {likes: 1}})
+        .exec((err, com, next) => {
+          if (err){
+            res.json(err);
+            return Promise.reject(new Error("Error finding ancestors in API: " + err.message));
           }
-        })
-        .exec((err, com) => {
-          if (err)
-            console.log("Error finding nested comments: " + err.message);
+
           for (var i = 0; i < com.length; i++) {
             if (com[i].ancestors.length == curLength + 1) {
               x.push(com[i]);
@@ -156,7 +158,8 @@ var getNestedCommentsByParentId = function(req, res) {
           res.json(x);
         });
     }, (err) => {
-      console.log("Error fetching nested comments: " + err.message);
+      res.json(err);
+      return Promise.reject(new Error("Error fetching nested comments in API: " + err.message));
     });
 };
 
@@ -173,23 +176,31 @@ var getNestedCommentsByParentId = function(req, res) {
 //UPDATE
 var setCommentById = function(req, res) {
   setCommentByIdQuery(req.params.commentId, req.body).exec(function(err, com) {
-    if (err)
-      throw err;
+    if (err){
+      res.json(err);
+      return Promise.reject(new Error("Error changing comment by ID in API: " + err.message));
+    }
     res.json(com);
   });
 };
 
 //DELETE
 var deleteAllComments = function(req, res) {
-  deleteAllCommentsQuery();
-  console.log("Deleted all comment entries");
+  deleteAllCommentsQuery().exec(function(err, com){
+    if (err){
+      res.json(err);
+      return Promise.reject(new Error("Error deleting all comments in API: " + err.message));
+    }
+    res.json(com);
+  });
 };
 
 var deleteCommentById = function(req, res) {
   getCommentByIdQuery(req.params.commentId).remove(function(err, com) {
-    if (err)
-      throw err;
-    console.log('Deleted!');
+    if (err){
+      res.json(err);
+      return Promise.reject(new Error("Error deleting comment by ID in API: " + err.message));
+    }
     res.json(com);
   });
 }

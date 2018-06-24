@@ -36,8 +36,7 @@ export class ApiProvider {
         });
         resolve(comments);
       }, err => {
-        console.log("Error fetching comments: " + err.message);
-        reject(err);
+        reject(new Error("Error fetching comments: " + err.message));
       });
     });
   }
@@ -54,8 +53,7 @@ export class ApiProvider {
         });
         resolve(posts);
       }, err => {
-        console.log("Error fetching posts: " + err.message);
-        reject(err);
+        reject(new Error("Error fetching posts: " + err.message));
       });
     });
   }
@@ -66,33 +64,43 @@ export class ApiProvider {
       this.http.get<any[]>(path).subscribe(data => {
         resolve(data);
       }, err => {
-        console.log("Error fetching comment by ID: " + err.message);
-        reject(err);
+        reject(new Error("Error fetching comment by ID: " + err.message));
       });
     });
   }
 
   sendPost(data) {
-    let author = this.authService.getUserInfo()._id;
-    data.author = author;
-    path = url + prefixComments;
-    return new Promise((resolve, reject) => {
-      return this.http.post(path, data, {
-        headers: jsonHeader,
-        observe: 'response'
-      })
-        .subscribe(res => {
-          resolve(res);
-        }, (err) => {
-          console.log("Error creating post: " + err.message);
-          reject(err);
-        });
-    });
+    return new Promise((resolve,reject) => {
+      this.authService.setUserInfo()
+        .then(loaded => {
+          if(loaded){
+            return this.authService.getUserInfo()._id;
+          }
+        })
+        .then(author => {
+          data.author = author;
+          path = url + prefixComments;
+
+          return this.http.post(path, data, {
+            headers: jsonHeader,
+            observe: 'response'
+          })
+            .subscribe(res => {
+              resolve(res);
+            }, (err) => {
+              reject(new Error("Error pushing new post (subscribing data): " + err.message));
+            });
+        })
+        .catch(err => {
+          reject(new Error("Error pushing new post (fetching author ID): " + err.message));
+        })
+    })
   }
 
   pushAncestors(result, ancestors) {
     var data = result.body;
     var id = result.body._id;
+
     path = url + prefixComments + id;
     if (ancestors == null) {
       data.ancestors.push(id);
@@ -109,8 +117,7 @@ export class ApiProvider {
         .subscribe(res => {
           resolve(res);
         }, (err) => {
-          console.log("Error creating post: " + err.message);
-          reject(err);
+          reject(new Error("Error creating post: " + err.message));
         });
     });
   }
@@ -127,8 +134,7 @@ export class ApiProvider {
           .subscribe(res => {
             resolve(res);
           }, (err) => {
-            console.log("Error incrementing like: " + err.message);
-            reject(err);
+            reject(new Error("Error incrementing like: " + err.message));
           });
       });
     });
@@ -146,8 +152,7 @@ export class ApiProvider {
           .subscribe(res => {
             resolve(res);
           }, (err) => {
-            console.log("Error incrementing dislike: " + err.message);
-            reject(err);
+            reject(new Error("Error incrementing dislike: " + err.message));
           });
       });
     });
@@ -159,8 +164,7 @@ export class ApiProvider {
       return this.http.get<any[]>(path).subscribe(data => {
         resolve(data);
       }, err => {
-        console.log("Error getting childs: " + err.message);
-        reject(err);
+        reject(new Error("Error getting childs: " + err.message));
       })
     });
   }
@@ -168,18 +172,16 @@ export class ApiProvider {
   deletePostById(id) {
     path = url + prefixComments + id;
     return new Promise((resolve,reject) => {
-      return this.http.delete<any[]>(path, {
+      return this.http.put(path, {content:'[deleted]'},{
         headers: jsonHeader,
         observe: 'response'
       })
       .subscribe(res => {
         resolve(res);
       }, (err) => {
-        console.log("Error deleting post: " + err.message);
-        reject(err);
+        reject(new Error("Error deleting post: " + err.message));
       })
     })
-
   }
 
   getRandomColor() {

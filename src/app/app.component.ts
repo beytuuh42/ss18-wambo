@@ -12,13 +12,21 @@ import { TabsPage } from '../pages/tabs-page/tabs-page';
   templateUrl: 'app.template.html'
 })
 export class MyApp {
-  rootPage:any = LoginPage;
-  //rootPage:any = TabsPage;
+  user = localStorage.getItem('username');
+  pw = localStorage.getItem('pw');
+
+  rootPage:any = (this.user && this.pw) ? TabsPage : LoginPage;
+  //rootPage:any;
 
   constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen) {
     platform.ready().then(() => {
-      // Okay, so the platform is ready and our plugins are available.
-      // Here you can do any higher level native things you might need.
+
+      // if(this.user && this.pw) {
+      //   this.rootPage = TabsPage;
+      // } else {
+      //   this.rootPage = LoginPage
+      // }
+
       statusBar.styleDefault();
       splashScreen.hide();
     });

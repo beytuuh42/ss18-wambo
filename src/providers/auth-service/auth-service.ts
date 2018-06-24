@@ -1,92 +1,113 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { UserController } from '../api/userController';
 import { PasswordHandler } from '../../utils/passwordHandler';
 
-import 'rxjs/add/observable/throw'
-import 'rxjs/add/operator/map';
-
 export class User {
   _id: any;
-  email: string;
+  username: string;
 
-  constructor(name: any, email: string) {
+  constructor(name: any, username: string) {
     this._id = name;
-    this.email = email;
+    this.username = username;
   }
 }
-
-let url = "proxy/";
-let prefixUsers = "users";
-let path = "";
-let jsonHeader = new HttpHeaders({ 'Content-Type': 'application/json' });
 
 @Injectable()
 export class AuthService {
   currentUser: User;
   pwHandler:PasswordHandler;
+  exists:Boolean;
+  user = localStorage.getItem('username');
+  pw = localStorage.getItem('pw');
 
   constructor(public http: HttpClient, public userController: UserController) {
   }
 
   public login(credentials) {
-    if (credentials.email === null || credentials.password === null) {
-      return Observable.throw("Please insert credentials");
+    if (credentials.username === null || credentials.password === null) {
+      //return Observable.throw("Please insert credentials");
+      return Promise.reject(new Error("Please insert credentials"));
     } else {
-      return Observable.create(observer => {
-        this.userController.getUserByEmail(credentials.email)
+      return new Promise((resolve, reject) => {
+        this.userController.getUserByUsername(credentials.username)
           .then((data:any) => {
             if(data == null){
-              return false;
+              resolve(false);
             } else {
               this.pwHandler = new PasswordHandler(credentials.password, data.password);
               let access = this.pwHandler.isValidPassword();
-              this.currentUser = new User(data._id, data.email);
+              this.currentUser = new User(data._id, data.username);
               console.log(this.currentUser);
-              return access;
+              resolve(access);
             }
           })
-          .then(access => {
-            observer.next(access);
-            observer.complete();
-          });
-      });
-    }
+          .catch(err => {
+            reject(new Error("Error signing in: " + err.message));
+          })
+        })
+      }
   }
 
   public register(credentials) {
-    if (credentials.email === null || credentials.password === null) {
-      return Observable.throw("Please insert credentials");
-    } else {
-      if (!this.isEmail(credentials.email)) {
-        return Observable.throw("Please insert valid credentials.\n Correct E-Mail format: 'random@email.de'.");
+    return new Promise((resolve, reject) => {
+      if (credentials.username === null || credentials.password === null) {
+        reject(new Error("Please insert credentials"));
       }
-      if (credentials.password.length < 8) {
-        return Observable.throw("Please insert valid credentials.\n Password needs a length of minimum 8.");
-      }
-      return Observable.create(observer => {
-        this.userController.createUser(credentials);
-        observer.next(true);
-        observer.complete();
-      });
-    }
+      this.userExists(credentials.username)
+        .then(data => {
+          if(data != true){
+            if (credentials.password.length < 8) {
+              reject(new Error("Password needs a minimum length of 8."));
+            }
+            resolve(this.userController.createUser(credentials));
+          } else {
+            reject(new Error("Username already in use."));
+          }
+        })
+        .catch(err => {
+          reject(new Error("Error signing up: " + err.message));
+        });
+    })
   }
 
-  public getUserInfo(): User {
+  public getUserInfo(){
     return this.currentUser;
   }
 
-  public logout() {
-    return Observable.create(observer => {
-      this.currentUser = null;
-      observer.next(true);
-      observer.complete();
-    });
+  public setUserInfo(){
+    return new Promise((resolve, reject)=>{
+      if(this.user && this.pw){
+        this.userController.getUserByUsername(this.user)
+          .then((data:any) => {
+            this.currentUser = new User(data._id,data.username);
+            resolve(true);
+          })
+          .catch(err => {
+            reject(new Error("Error setting current user: " + err.message));
+          })
+      }
+    })
   }
 
-  public isEmail(email: string) {
-    var re = /^(?:[a-z0-9!#$%&amp;'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&amp;'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])$/;
-    return re.test(email);
+  public logout() {
+    return new Promise((resolve) => {
+      this.currentUser = null;
+      resolve(true);
+    })
+  }
+
+  public userExists(username:String):Promise<Boolean>{
+    return this.userController.getUserByUsername(username)
+      .then(data => {
+        if(data != null){
+          return true;
+        } else {
+          return false;
+        }
+      })
+      .catch(err => {
+        return Promise.reject(new Error("User exists: " + err.message));
+      })
   }
 }

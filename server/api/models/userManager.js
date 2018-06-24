@@ -15,8 +15,8 @@ function createUserQuery(body) {
 function getUserByIdQuery(_id) {
   return User.findById(_id);
 };
-function getUserByEmailQuery(email) {
-  return User.findOne({'email':email});
+function getUserByUsernameQuery(username) {
+  return User.findOne({'username':username});
 }
 
 function getAllUsersQuery() {
@@ -34,8 +34,10 @@ function deleteAllUsersQuery() {
 // CREATE
 var createUser = function(req, res) {
   createUserQuery(req.body).save(function(err, com) {
-    if (err)
-      throw err;
+    if (err){
+      res.json(err);
+      return Promise.reject(new Error("Error creating user in API: " + err.message));
+    }
     res.json(com);
   });
 };
@@ -43,25 +45,29 @@ var createUser = function(req, res) {
 // READ
 var getUserById = function(req, res) {
   getUserByIdQuery(req.params.userId).exec(function(err, com) {
-    if (err)
-      throw err;
+    if (err){
+      res.json(err);
+      return Promise.reject(new Error("Error finding user by ID in API: " + err.message));
+    }
     res.json(com);
   });
 };
 var getAllUsers = function(req, res) {
   getAllUsersQuery().exec(function(err, com) {
-    if (err) {
-      throw err;
-    } else {
-      res.json(com);
+    if (err){
+      res.json(err);
+      return Promise.reject(new Error("Error fetching all useres in API: " + err.message));
     }
+    res.json(com)
   });
 };
 
-var getUserByEmail = function(req, res) {
-  getUserByEmailQuery(req.params.email).exec(function(err, com) {
-    if (err)
-      throw err;
+var getUserByUsername = function(req, res) {
+  getUserByUsernameQuery(req.params.username).exec(function(err, com) {
+    if (err){
+      res.json(err);
+      return Promise.reject(new Error("Error finding user by username in API: " + err.message));
+    }
     res.json(com);
   });
 }
@@ -71,17 +77,19 @@ var getUserByEmail = function(req, res) {
 
 var deleteUserById = function(req, res) {
   getUserByIdQuery(req.params.userId).remove(function(err, com) {
-    if (err)
-      throw err;
-    console.log('Deleted!');
+    if (err){
+      res.json(err);
+      return Promise.reject(new Error("Error deleting user by ID in API: " + err.message));
+    }
     res.json(com);
   });
 }
 var deleteAllUsers = function(req, res) {
   deleteAllUsersQuery().exec(function(err, com){
-    if (err)
-      throw err;
-      console.log("Deleted all user entries");
+    if (err){
+      res.json(err);
+      return Promise.reject(new Error("Error deleting all  users in API: " + err.message));
+    }
     res.json(com);
   });
 };
@@ -89,6 +97,6 @@ var deleteAllUsers = function(req, res) {
 exports.createUser = createUser;
 exports.getAllUsers = getAllUsers;
 exports.getUserById = getUserById;
-exports.getUserByEmail = getUserByEmail;
+exports.getUserByUsername = getUserByUsername;
 exports.deleteUserById = deleteUserById;
 exports.deleteAllUsers = deleteAllUsers;

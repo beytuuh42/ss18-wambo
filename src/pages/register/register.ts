@@ -10,12 +10,12 @@ import { AuthService } from '../../providers/auth-service/auth-service';
 })
 export class RegisterPage {
   createSuccess = false;
-  registerCredentials = { email: '', password: '' };
+  registerCredentials = { username: '', password: '' };
 
   constructor(private nav: NavController, private auth: AuthService, private alertCtrl: AlertController) { }
 
   public register() {
-    this.auth.register(this.registerCredentials).subscribe(success => {
+    this.auth.register(this.registerCredentials).then(success => {
       if (success) {
         this.createSuccess = true;
         this.showPopup("Success", "Account created.");
