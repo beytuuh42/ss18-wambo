@@ -2,12 +2,11 @@
   "name": "wamboo",
   "app_id": "",
   "type": "ionic-angular",
-  "integrations": {
-    "cordova": {}
-  },
   "proxies": [
     {
       "path": "/proxy",
       "proxyUrl": "http://localhost:3000/api"
-    }]
+    }
+  ],
+  "integrations": {}
 }

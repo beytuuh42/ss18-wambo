@@ -34,10 +34,16 @@ function deleteAllUsersQuery() {
 // CREATE
 var createUser = function(req, res) {
   createUserQuery(req.body).save(function(err, com) {
+<<<<<<< server/api/models/userManager.js
     if (err){
       res.json(err);
       return Promise.reject(new Error("Error creating user in API: " + err.message));
     }
+=======
+    if (err)
+      throw err;
+    res.statusCode = 201;
+>>>>>>> server/api/models/userManager.js
     res.json(com);
   });
 };
@@ -45,18 +51,35 @@ var createUser = function(req, res) {
 // READ
 var getUserById = function(req, res) {
   getUserByIdQuery(req.params.userId).exec(function(err, com) {
+<<<<<<< server/api/models/userManager.js
     if (err){
       res.json(err);
       return Promise.reject(new Error("Error finding user by ID in API: " + err.message));
     }
+=======
+    if (err || com === null){
+      res.status(404).send(req.params.userId + " not found");
+    }else{
+>>>>>>> server/api/models/userManager.js
     res.json(com);
+    }
   });
 };
+
 var getAllUsers = function(req, res) {
   getAllUsersQuery().exec(function(err, com) {
+<<<<<<< server/api/models/userManager.js
     if (err){
       res.json(err);
       return Promise.reject(new Error("Error fetching all useres in API: " + err.message));
+=======
+    if (err || com === null){
+      res.statusCode = 404;
+      // res.statusMessage =  "no users found"
+      res.json();
+    }else{
+    res.json(com);
+>>>>>>> server/api/models/userManager.js
     }
     res.json(com)
   });
@@ -64,13 +87,14 @@ var getAllUsers = function(req, res) {
 
 var getUserByUsername = function(req, res) {
   getUserByUsernameQuery(req.params.username).exec(function(err, com) {
-    if (err){
-      res.json(err);
-      return Promise.reject(new Error("Error finding user by username in API: " + err.message));
-    }
+    if (err || com === null){
+      res.status(404).send(req.params.username + " not found");
+    }else{
     res.json(com);
+    }
   });
-}
+};
+
 
 
 // DELETE

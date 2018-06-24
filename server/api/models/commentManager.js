@@ -101,6 +101,7 @@ var getCommentById = function(req, res) {
     res.json(com);
   });
 };
+
 var getAllComments = function(req, res) {
   getAllCommentsQuery().exec(function(err, com) {
     if (err){
@@ -112,6 +113,7 @@ var getAllComments = function(req, res) {
     }
   });
 };
+
 var getUserTotalReceivedLikes = function(req, res) {
   getUserTotalReceivedLikesQuery(req.params.userId).exec(function(err,com){
     if (err){
@@ -122,6 +124,8 @@ var getUserTotalReceivedLikes = function(req, res) {
     res.json(com);
   });
 };
+
+
 var getUserTotalReceivedDislikes = function(req, res) {
   getUserTotalReceivedDislikesQuery(req.params.userId).exec(function(err,com){
     if (err){
@@ -132,6 +136,7 @@ var getUserTotalReceivedDislikes = function(req, res) {
     res.json(com);
   });
 };
+
 var getUserTotalComments = function(req, res) {
   getUserTotalCommentsQuery(req.params.userId).exec(function(err,com){
     if (err){
@@ -193,6 +198,7 @@ var setCommentById = function(req, res) {
   });
 };
 
+
 //DELETE
 var deleteAllComments = function(req, res) {
   deleteAllCommentsQuery().exec(function(err, com){
@@ -214,7 +220,7 @@ var deleteCommentById = function(req, res) {
     }
     res.json(com);
   });
-}
+};
 
 exports.createComment = createComment;
 exports.getCommentById = getCommentById;
