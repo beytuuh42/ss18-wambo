@@ -74,7 +74,7 @@ var getAllUsers = function(req, res) {
 var getUserByUsername = function(req, res) {
   getUserByUsernameQuery(req.params.username).exec(function(err, com) {
     var user = req.params.username;
-    if (err){
+    if (err || com == null){
       res.statusCode = 404;
       res.status(404).send(user + " not found");
     } else {
