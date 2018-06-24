@@ -12,7 +12,6 @@ import { RegisterPage } from '../register/register'
 export class LoginPage {
   loading: Loading;
   registerCredentials = { username: '', password: '' };
-  myStorage = window.localStorage;
   constructor(private nav: NavController, private auth: AuthService, private alertCtrl: AlertController, private loadingCtrl: LoadingController) {
 
   }
@@ -25,7 +24,6 @@ export class LoginPage {
     this.showLoading()
     this.auth.login(this.registerCredentials).then(allowed => {
       if (allowed) {
-        this.storeLogin();
         this.nav.setRoot(TabsPage);
       } else {
         this.showError("Access Denied");
@@ -54,10 +52,4 @@ export class LoginPage {
     });
     alert.present();
   }
-
-  storeLogin(){
-    localStorage.setItem('username', this.registerCredentials.username);
-    localStorage.setItem('pw', this.registerCredentials.password);
-  }
-
 }

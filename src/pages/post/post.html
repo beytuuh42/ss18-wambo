@@ -78,7 +78,7 @@
 
 
     <!-- </ion-card> -->
-    <ion-item-sliding class="secondLevel" *ngFor="let comment of comments">
+    <ion-item-sliding class="secondLevel" *ngFor="let comment of comments" >
       <ion-item class="warpper" [ngStyle]="{'background-color': comment.color}" id="{{comment._id}}">
         <div class="commentHeader">{{comment.username}}</div>
         <p text-wrap *ngIf="comment.content=='[deleted]'" style="font-style:italic;">{{comment.content}}</p>

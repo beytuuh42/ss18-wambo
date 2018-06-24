@@ -5,4 +5,6 @@ config.mongoURI = {
   test: 'mongodb://localhost:27017/wambotest'
 };
 
+config.secret = "plusultra"
+
 module.exports = config;

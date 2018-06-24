@@ -28,6 +28,14 @@ var schema = new Schema({
   created_at: {
     type: Date,
     default: Date.now
+  },
+  liked_by: {
+    type: [ObjectId],
+    required: false
+  },
+  disliked_by: {
+    type: [ObjectId],
+    required: false
   }
 });
 
