@@ -40,8 +40,9 @@ var createUser = function(req, res) {
   req.body.password = userModel.encryptPassword(req.body.password);
 
   createUserQuery(req.body).save(function(err, user) {
-    if (err){
-        res.json(err)
+    if (err || com === null){
+      res.status(400).send("Error creating User " + err );
+
     }
     res.json(req.body);
   });
