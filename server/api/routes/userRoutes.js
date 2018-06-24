@@ -13,5 +13,5 @@ module.exports = function(app) {
 
   app.route('/api/emails/:email')
     .get(userManager.getUserByEmail);
-    
+
 };

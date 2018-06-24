@@ -1,44 +1,52 @@
 'use strict';
+process.env.NODE_ENV = 'test';
 
 const chai = require('chai');
 const expect = require('chai').expect;
 chai.use(require('chai-http'));
-const app = require('../server.js'); // The server
-const model = require('../server/api/models/commentModel');
+const app = require('../server.js');
 const mongoose = require('mongoose');
+const commentModel = require('../server/api/models/commentModel');
+const Comment = commentModel.schema;
 
+var db = mongoose.connection;
 
 describe('API endpoint /comments', function() {
-  var commentId;
+  var commentId = new mongoose.Types.ObjectId('211111111111111111111111')
+  var userId = new mongoose.Types.ObjectId('111111111111111111111111')
 
   this.timeout(5000); // How long to wait for a response (ms)
 
-  before(function() {
-
+  before(function(done) {
+    Comment.remove({}, function(err) {
+       console.log('collection removed')
+       done();
+    });
   });
 
-  after(function() {
-    return chai.request(app)
-      .delete('/api/comments/' + commentId)
-      .then(function(res) {
-        console.log("Deleted testcontent from database");
-        expect(res).to.have.status(200);
-      });
+  after(function(done){
+    Comment.remove({}, function(err) {
+       console.log('collection removed')
+       done();
+    });
   });
+
 
   // POST - Add new comment
   it('should add new post', function() {
     return chai.request(app)
       .post('/api/comments')
       .send({
+        _id: commentId,
         content: 'Hey guys',
-        author: mongoose.Types.ObjectId()
+        author: userId
       })
       .then(function(res) {
         expect(res).to.have.status(200);
-        expect(res).to.be.an('Object');
-        expect(res.body.content).to.eql('Hey guys');
-        commentId = res.body._id;
+        expect(res).to.be.json;
+        expect(res.body.content).to.equal('Hey guys');
+        expect(res.body._id).to.equal('211111111111111111111111');
+        expect(res.body.author).to.equal('111111111111111111111111');
       })
   });
 
@@ -49,7 +57,7 @@ describe('API endpoint /comments', function() {
       .type('form')
       .send({
         content: 'Hey Guys',
-        author: mongoose.Types.ObjectId()
+        author: userId
       })
       .catch(function(err) {
         expect(err).to.have.status(400);
@@ -64,7 +72,8 @@ describe('API endpoint /comments', function() {
       .then(function(res) {
         expect(res).to.have.status(200);
         expect(res).to.be.json;
-        //expect(res.body).to.be.an('array');
+        expect(res.body).to.be.an('array');
+        expect(res.body).to.have.lengthOf(1)
         // expect(res.body.results).to.be.an('array');
     });
   });
@@ -82,28 +91,26 @@ describe('API endpoint /comments', function() {
 });
 
 describe('API endpoint /comments/:commentId', function() {
-  var commentId;
+  var commentId = new mongoose.Types.ObjectId('111111111111111111111111');
   var commentLikes;
   var commentDislikes;
 
-  this.timeout(5000); // How long to wait for a response (ms)
-
-  before(function() {
-      return chai.request(app)
-        .post('/api/comments')
-        .send({
-          content: 'Hey guys',
-          author: mongoose.Types.ObjectId()
-        })
-        .then(function(res) {
-          commentId = res.body._id;
-          commentLikes = res.body.likes;
-          commentDislikes = res.body.dislikes;
-          console.log("Added testcontent to database");
-        });
-
+  var testComment = new Comment({
+    _id: commentId,
+    content: 'Hey guys',
+    author: new mongoose.Types.ObjectId('211111111111111111111111')
   });
 
+
+
+  this.timeout(5000); // How long to wait for a response (ms)
+
+  before(function(){
+        testComment.save(function(err, com) {
+          if (err)
+            throw err;
+        });
+  });
 
   // Get Comment by id
   it('should get Comment by id', function() {
@@ -111,7 +118,11 @@ describe('API endpoint /comments/:commentId', function() {
       .get('/api/comments/' + commentId)
       .then(function(res) {
         expect(res).to.have.status(200);
-        expect(res.body.content).to.have.lengthOf.above(0);
+        expect(res).to.be.json;
+        expect(res.body.content).to.equal('Hey guys');
+        expect(res.body._id).to.equal('111111111111111111111111');
+        expect(res.body.author).to.equal('211111111111111111111111')
+
       });
   });
 
@@ -120,16 +131,16 @@ describe('API endpoint /comments/:commentId', function() {
     return chai.request(app)
       .put('/api/comments/' + commentId)
       .send({
-        likes: commentLikes+1,
-        dislikes: commentDislikes+1
+        likes: +1,
+        dislikes: +1
       })
       .then(function(res) {
         expect(res).to.have.status(200);
         expect(res).to.be.json;
-        expect(res.body.content).to.eql('Hey guys');
-        expect(res.body._id).to.eql(commentId);
-        expect(res.body.likes).to.eql(1);
-        expect(res.body.dislikes).to.eql(1);
+        expect(res.body.content).to.equal('Hey guys');
+        expect(res.body._id).to.eql('111111111111111111111111');
+        expect(res.body.likes).to.equal(1);
+        expect(res.body.dislikes).to.equal(1);
       });
   });
 
@@ -141,6 +152,85 @@ describe('API endpoint /comments/:commentId', function() {
         expect(res).to.have.status(200);
         expect(res).to.be.json;
         expect(res.body).to.eql({ n: 1, ok: 1 });
+      })
+
+  });
+});
+
+
+describe('API endpoint /nested/:commentId', function() {
+  var author = mongoose.Types.ObjectId('56cb91bdc3464f14678934ca');
+  var commentIdChild1 =  mongoose.Types.ObjectId('56cb91bdc3464f14678934c1');
+  var commentIdChild2 =  mongoose.Types.ObjectId('56cb91bdc3464f14678934c3');
+  var commentIdParent = mongoose.Types.ObjectId('56cb91bdc3464f14678934c2');
+  var ancestorsChild1 = [commentIdParent, commentIdChild1];
+  var ancestorsChild2 = [commentIdParent, commentIdChild2];
+
+  var parentPost = new Comment({
+    content: 'parent',
+    author: author,
+    _id: commentIdParent,
+    ancestors: commentIdParent,
+  })
+
+  var child1 = new Comment({
+    content: 'child',
+    author: author,
+    _id: commentIdChild1,
+    ancestors: ancestorsChild1
+  })
+
+  var child2 = new Comment({
+    content: 'child2',
+    author: author,
+    _id: commentIdChild2,
+    ancestors: ancestorsChild2
+  })
+
+
+  this.timeout(5000); // How long to wait for a response (ms)
+
+  before(function(done) {
+    parentPost.save(function(err, res) {
+      if (err)
+        throw err;
+    });
+    child1.save(function(err, res) {
+      if (err)
+        throw err;
+    });
+    child2.save(function(err, res) {
+      if (err)
+        throw err;
+    });
+    done();
+  });
+
+after(function(done){
+  Comment.findById(commentIdParent).remove(function(err, com) {
+    if (err)
+      throw err;
+  });
+  Comment.findById(commentIdChild1).remove(function(err, com) {
+    if (err)
+      throw err;
+  });
+  Comment.findById(commentIdChild2).remove(function(err, com) {
+    if (err)
+      throw err;
+  });
+  done();
+});
+
+  // get child comments of post
+  it('should get children ids of post', function() {
+    return chai.request(app)
+      .get('/api/nested/' + commentIdParent)
+      .then(function(res) {
+        expect(res).to.have.status(200);
+        expect(res).to.be.json;
+        expect(res.body).to.have.nested.property('[0]._id', '56cb91bdc3464f14678934c1' );
+        expect(res.body).to.have.nested.property('[1]._id', '56cb91bdc3464f14678934c3' );
       })
 
   });

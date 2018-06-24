@@ -212,14 +212,7 @@ var setCommentById = function(req, res) {
 
 //DELETE
 var deleteAllComments = function(req, res) {
-  deleteAllCommentsQuery().exec(function(err, com){
-    if(err){
-      err.statuscode = '400'
-      res.json(err);
-    } else {
-      res.json(com)
-    }
-  });
+  deleteAllCommentsQuery();
   console.log("Deleted all comment entries");
 };
 
