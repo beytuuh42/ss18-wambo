@@ -215,17 +215,8 @@ describe('API endpoint /nested/:commentId', function() {
   });
 
 after(function(done){
-  Comment.findById(commentIdParent).remove(function(err, com) {
-    if (err)
-      throw err;
-  });
-  Comment.findById(commentIdChild1).remove(function(err, com) {
-    if (err)
-      throw err;
-  });
-  Comment.findById(commentIdChild2).remove(function(err, com) {
-    if (err)
-      throw err;
+  Comment.remove({}, function(err) {
+     console.log('collection removed')
   });
   done();
 });

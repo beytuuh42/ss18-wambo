@@ -2,6 +2,7 @@
   "name": "wamboo",
   "app_id": "",
   "type": "ionic-angular",
+  "display": "fullscreen",
   "proxies": [
     {
       "path": "/proxy",

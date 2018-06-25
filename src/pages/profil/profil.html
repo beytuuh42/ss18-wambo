@@ -8,29 +8,30 @@
 
 <ion-content>
   <ion-list>
-        <ion-list>
-        <ion-item>
-          {{comments}} Comments
-        </ion-item>
-      </ion-list>
+    <ion-list>
+      <ion-item>
+        {{comments}} Comments
+      </ion-item>
+    </ion-list>
 
-      <ion-list>
-        <ion-item>
-          {{likes}} Likes
-        </ion-item>
-      </ion-list>
+    <ion-list>
+      <ion-item>
+        {{likes}} Likes
+      </ion-item>
+    </ion-list>
 
-      <ion-list>
-        <ion-item>
+    <ion-list>
+      <ion-item>
         {{dislikes}} Dislikes
       </ion-item>
-      </ion-list>
+    </ion-list>
+
   </ion-list>
-<ion-list>
   <ion-item>
-        <button ion-button (click)="logout()">
-          <ion-icon name="ios-log-out"></ion-icon>
+    <button ion-button (click)="logout()">
+          <ion-icon name="md-log-out"></ion-icon>
+           logout
         </button>
-      </ion-item>
-  </ion-list>
+  </ion-item>
+
 </ion-content>
