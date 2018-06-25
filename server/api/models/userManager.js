@@ -40,7 +40,7 @@ var createUser = function(req, res) {
   req.body.password = userModel.encryptPassword(req.body.password);
 
   createUserQuery(req.body).save(function(err, user) {
-    if (err || com === null){
+    if (err || user === null){
       res.status(400).send("Error creating User " + err );
 
     }
@@ -74,7 +74,7 @@ var getAllUsers = function(req, res) {
 var getUserByUsername = function(req, res) {
   getUserByUsernameQuery(req.params.username).exec(function(err, com) {
     var user = req.params.username;
-    if (err || com == null){
+    if (err){
       res.statusCode = 404;
       res.status(404).send(user + " not found");
     } else {
