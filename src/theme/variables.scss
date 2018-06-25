@@ -54,6 +54,10 @@ $colors: (
 // $toolbar-md-tab-color-active: color($colors, white);
 // $tabs-md-tab-color-inactive: color($colors, dark);
 
+//logout button font color
+$note-ios-color: color($colors, white);
+$note-md-color: color($colors, white);
+
 //bottom tabs
 $tabs-md-background: color($colors, secondaryGreen);
 $tabs-md-tab-color-active: color($colors, white);
