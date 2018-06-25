@@ -114,11 +114,11 @@
     </ion-item-sliding>
   </ion-list>
 
-  <ion-fab showWhen="android" center bottom #fab2>
+  <ion-fab showWhen="android" right bottom #fab2>
     <button id="androidFab" ion-fab (click)="pushAddPost(post.ancestors)"><ion-icon name="md-add"></ion-icon></button>
   </ion-fab>
 
-  <ion-fab center bottom showWhen="ios">
+  <ion-fab right bottom showWhen="ios">
       <button id="iosFab" ion-fab (click)="pushAddPost(post.ancestors)">
         <ion-icon name="ios-add"></ion-icon>
       </button>
