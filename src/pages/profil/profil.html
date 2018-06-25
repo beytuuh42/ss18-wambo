@@ -5,12 +5,26 @@
     </ion-title>
   </ion-navbar>
 </ion-header>
-
-
 <ion-content>
-  <ion-list-header  class="head">
+<div class="head">
+  <button ion-button [clear]="isClear" small>
+  <ion-note (click)="logout()">Logout</ion-note>
+</button>
+</div>
+<div class="top">
+    <div class="top-items" >
+      <ion-img width="80" height="80" src="../assets/imgs/avatar.png" style="background: transparent">
+      </ion-img>
+        <h2>{{user}}</h2>
+    </div>
+
+</div>
+<div class="body">
+
+<!--
+  <ion-list-header  class="header">
     {{user}}s Statistic
-  </ion-list-header>
+  </ion-list-header> -->
   <ion-list>
     <ion-item>
       Comments: {{comments}}
@@ -21,9 +35,14 @@
     <ion-item>
       Dislikes: {{dislikes}}
     </ion-item>
-    <ion-item ion-item (click)="logout()" color="green">
-      <ion-note item-start>Logout</ion-note>
-      <ion-icon name="ios-log-out" item-right></ion-icon>
+    <ion-item>
+      Terms of Use
     </ion-item>
+    <ion-item>
+      Privacy Statement
+    </ion-item>
+
   </ion-list>
+
+  </div>
 </ion-content>
