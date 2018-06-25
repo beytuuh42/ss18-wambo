@@ -26,4 +26,12 @@ page-post {
   ion-fab[bottom] {
     bottom:15px;
   }
+
+  #androidFab{
+    background: color($colors, secondaryGreen);
+  }
+
+  #iosFab{
+    background: color($colors, secondaryGreen);
+  }
 }

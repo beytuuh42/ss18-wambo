@@ -8,30 +8,34 @@
 
 <ion-content>
   <ion-list>
-    <ion-list>
-      <ion-item>
-        {{comments}} Comments
-      </ion-item>
-    </ion-list>
 
-    <ion-list>
       <ion-item>
-        {{likes}} Likes
+        <p id = "profilCommentsAmount" class = "profileStatistics">{{comments}} Comments</p>
       </ion-item>
-    </ion-list>
 
-    <ion-list>
       <ion-item>
-        {{dislikes}} Dislikes
+        <p id = "profilLikesAmount" class = "profileStatistics">{{likes}} Likes</p>
       </ion-item>
-    </ion-list>
+
+      <ion-item>
+        <p id = "profilDislikessAmount" class = "profileStatistics">{{dislikes}} Dislikes</p>
+      </ion-item>
+
+      <ion-item>
+        <p id = "profilDislikessAmount" class = "profileStatistics">Nutzungsbedinungen</p>
+      </ion-item>
+
+      <ion-item>
+        <p id = "profilDislikessAmount" class = "profileStatistics">Datenschutzerklärung</p>
+      </ion-item>
 
   </ion-list>
-  <ion-item>
-    <button ion-button (click)="logout()">
-          <ion-icon name="md-log-out"></ion-icon>
-           logout
-        </button>
-  </ion-item>
+
+  <ion-fab left bottom>
+    <button id="profileLogoutButton" ion-button (click)="logout()">
+        <ion-icon name="md-log-out"></ion-icon>
+         logout
+      </button>
+  </ion-fab>
 
 </ion-content>

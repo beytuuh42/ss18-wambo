@@ -22,11 +22,11 @@ describe('Clicking on the create account button ', function(){
       password = element(by.id('passwordItemR'));
 
       var input = username.element(by.css('input'));
-      input.click();
+      browser.actions().mouseMove(input).click();
       input.sendKeys(Math.random().toString(36).substr(2, 5));
 
       var input2 = password.element(by.css('input'));
-      input2.click();
+      browser.actions().mouseMove(input2).click();
       input2.sendKeys(Math.random().toString(36).substr(2, 8));
 
       registerButton = element(by.id('registerButton'));

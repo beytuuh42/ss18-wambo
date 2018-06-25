@@ -1,6 +1,5 @@
 var username, password, loginButton;
-var floatingButton;
-var addPostSendButton, addPostMessage, createCommentLabel;
+var postTitle, commentWrapper;
 
 describe('Clicking on the login button ', function(){
 
@@ -30,7 +29,7 @@ describe('Clicking on the login button ', function(){
     });
 });
 
-describe('Clicking on the "+" button ', function(){
+describe('Clicking on a comment icon ', function(){
 
   afterAll(function() {
     browser.executeScript('window.sessionStorage.clear();');
@@ -41,31 +40,14 @@ describe('Clicking on the "+" button ', function(){
     browser.get('/');
   });
 
-  it('should display add-post view', function() {
-    //browser.sleep(5000);
-    floatingButton.click().then(function(){
+  it('should display the post view', function() {
+    commentWrapper = element.all((by.css('ion-item-sliding'))).first();
+    //browser.sleep(50000);
+    //expect(commentWrapper.isDisplayed()).toBeTruthy();
+    commentWrapper.click().then(function(){
       browser.sleep(500);
-      createCommentLabel = element(by.id('addPostTitle'));
-      //console.log(createCommentLabel);
-      expect(createCommentLabel.getText()).toEqual("Creating new Comment");
-    });
-  });
-
-  it('should display add-post view and display to home view after creating the message', function() {
-    floatingButton.click().then(function(){
-      browser.sleep(500);
-
-      addPostMessage = element(by.id('addPostMessage'));
-      addPostSendButton = element(by.id('addPostSendButton'));
-
-      var input = addPostMessage.element(by.css('input'));
-      browser.actions().mouseMove(input).click();
-      input.sendKeys('Test Message');
-
-      addPostSendButton.click().then(function(){
-        browser.sleep(500);
-        expect(floatingButton.isDisplayed()).toBeTruthy();
-      });
+        postTitle = element(by.id('postTitle'));
+        expect(postTitle.getText()).toEqual("Comments");
     });
   });
 });
