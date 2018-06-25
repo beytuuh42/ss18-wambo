@@ -1,3 +1,5 @@
+// routing of the queries
+
 module.exports = function(app) {
   var userManager = require('../models/userManager');
   var commentManager = require('../models/commentManager');

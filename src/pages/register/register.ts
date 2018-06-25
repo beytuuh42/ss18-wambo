@@ -14,6 +14,11 @@ export class RegisterPage {
 
   constructor(private nav: NavController, private auth: AuthService, private alertCtrl: AlertController) { }
 
+
+  /**
+    Sends register credentials to the operating function.
+    Popping a message box with the success information.
+   */
   public register() {
     this.auth.register(this.registerCredentials).then(success => {
       if (success) {
@@ -28,6 +33,12 @@ export class RegisterPage {
       });
   }
 
+  /**
+    Creates a new alert with the given params.
+    Redirecting to login page, if the register was successful.
+    @param title title of the pop up message
+    @param text text of the pop up message
+   */
   showPopup(title, text) {
     let alert = this.alertCtrl.create({
       title: title,

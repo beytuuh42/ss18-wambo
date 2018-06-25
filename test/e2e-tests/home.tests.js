@@ -8,6 +8,7 @@ describe('Clicking on the login button ', function(){
       browser.get('/');
     });
 
+    // Login
     it('should validate the credentials for a successful login and display the Home view', function() {
 
       username = element(by.id('loginItem'));
@@ -30,8 +31,10 @@ describe('Clicking on the login button ', function(){
     });
 });
 
+
 describe('Clicking on the "+" button ', function(){
 
+  // deleting jwt token
   afterAll(function() {
     browser.executeScript('window.sessionStorage.clear();');
     browser.executeScript('window.localStorage.clear();');
@@ -41,6 +44,7 @@ describe('Clicking on the "+" button ', function(){
     browser.get('/');
   });
 
+  // Click on the + button
   it('should display add-post view', function() {
     //browser.sleep(5000);
     floatingButton.click().then(function(){
@@ -51,6 +55,7 @@ describe('Clicking on the "+" button ', function(){
     });
   });
 
+  // Create a new comment
   it('should display add-post view and display to home view after creating the message', function() {
     floatingButton.click().then(function(){
       browser.sleep(500);

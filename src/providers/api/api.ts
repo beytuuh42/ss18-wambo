@@ -21,10 +21,11 @@ export class ApiProvider {
 
   constructor(public http: HttpClient, public authService:AuthService) { }
 
-  getLikeAmount() {
-
-  }
-
+  /**
+   * Making an http get request to the url in the path variable for retrieving
+   * all child comments and pushing those in an array.
+   * @returns promise object with the array
+   */
   getComments() {
     path = url + prefixComments;
     return new Promise((resolve, reject) => {
@@ -41,6 +42,12 @@ export class ApiProvider {
     });
   }
 
+
+  /**
+   * Making an http get request to the url in the path variable for retrieving
+   * all parent comments and pushing those in an array.
+   * @returns promise object with the array
+   */
   getPosts() {
     path = url + prefixComments;
     posts = [];
@@ -58,6 +65,12 @@ export class ApiProvider {
     });
   }
 
+  /**
+   * Making an http get request to the url in the path variable for retrieving
+   * a comment by the id.
+   * @param id id
+   * @returns promise object with the comment
+   */
   getCommentById(id) {
     path = url + prefixComments + id;
     return new Promise((resolve,reject) => {
@@ -69,16 +82,15 @@ export class ApiProvider {
     });
   }
 
+  /**
+   * Making an http post request to the url in the path variable for creating
+   * a new comment and attaching the current user as the author.
+   * @param data data of the comment
+   * @returns promise object with the comment
+   */
   sendPost(data) {
     return new Promise((resolve,reject) => {
-      // this.authService.setUserInfo()
-      //   .then(loaded => {
-      //     if(loaded){
-      //       return this.authService.getUserInfo()._id;
-      //     }
-      //   })
-      //   .then(author => {
-          data.author = this.authService.getUserInfo()._id;// author;
+          data.author = this.authService.getUserInfo()._id;
           path = url + prefixComments;
 
           return this.http.post(path, data, {
@@ -91,23 +103,25 @@ export class ApiProvider {
               reject(new Error("Error pushing new post (subscribing data): " + err.message));
             });
         })
-    //     .catch(err => {
-    //       reject(new Error("Error pushing new post (fetching author ID): " + err.message));
-    //     })
-    // })
   }
 
+  /**
+    Making an http put request to the url in the path variable for adding
+    the ancestors object to the given result object.
+    @param result comment, whose ancestors will updated
+    @param ancestors ancestors, who will be pushed into the comment
+    @returns promise object with the comment
+   */
   pushAncestors(result, ancestors) {
     var data = result.body;
     var id = result.body._id;
 
     path = url + prefixComments + id;
-    if (ancestors == null) {
-      data.ancestors.push(id);
-    } else {
+    if (ancestors != null) {
       data.ancestors = ancestors;
-      data.ancestors.push(id);
     }
+
+    data.ancestors.push(id);
 
     return new Promise((resolve, reject) => {
       return this.http.put<any[]>(path, data, {
@@ -122,6 +136,15 @@ export class ApiProvider {
     });
   }
 
+
+  /**
+    Retrieving a comment by it's id. Checking if the given user already liked
+    the comment. Like counter will be increased/decreased depending on the result
+    and user will be added/removed to the comments liked_by array.
+    @param commentId comment, whose like counter will be pushed
+    @param userId to add to the comments likes
+    @returns promise object with the comment
+   */
   incrementLike(commentId, userId) {
     path = url + prefixComments + commentId;
     return new Promise((resolve, reject) => {
@@ -151,6 +174,14 @@ export class ApiProvider {
     });
   }
 
+  /**
+    Retrieving a comment by it's id. Checking if the given user already disliked
+    the comment. Dislike counter will be increased/decreased depending on the result
+    and user will be added/removed to the comments disliked_by array by a put request.
+    @param commentId comment, whose like counter will be pushed
+    @param userId to add to the comments likes
+    @returns promise object with the comment
+   */
   incrementDislike(commentId, userId) {
     path = url + prefixComments + commentId;
     return new Promise((resolve, reject) => {
@@ -180,6 +211,11 @@ export class ApiProvider {
     });
   }
 
+   /**
+     Making an http get request to the url in the path variable for retrieving
+     all child comments from the given comment.
+     @returns promise object with the comments
+    */
   getAllChildrenByParent(id) {
     path = url + prefixNested + id;
     return new Promise((resolve, reject) => {
@@ -191,6 +227,12 @@ export class ApiProvider {
     });
   }
 
+  /**
+    Making an http put request to the url in the path variable for changing
+    the content of a comment to [deleted] for preventing fullstack issues.
+    @param id comment id to 'delete'
+    @returns promise object with the comment
+   */
   deletePostById(id) {
     path = url + prefixComments + id;
     return new Promise((resolve,reject) => {
@@ -206,6 +248,11 @@ export class ApiProvider {
     })
   }
 
+  /**
+    Generates a random color for the posts.
+    @param id comment id to 'delete'
+    @returns random color object
+   */
   getRandomColor() {
     let randomColor = "hsl(" + 360 * Math.random() + ',' +
       (20 + 70 * Math.random()) + '%,' +
@@ -213,6 +260,11 @@ export class ApiProvider {
     return (randomColor)
   }
 
+  /**
+    Gives the comments a random color
+    @param data comments data
+    @returns comments with color
+   */
   setRandomColors(data) {
     data.forEach((x: any) => {
       x.color = this.getRandomColor();
@@ -220,11 +272,23 @@ export class ApiProvider {
     return data;
   }
 
+  /**
+    Gives the comment a random color
+    @param data comment data
+    @returns comment with color
+   */
   setRandomColor(data) {
     data.color = this.getRandomColor();
     return data;
   }
 
+  /**
+    Checks if the given user already liked/disliked the comment.
+    @param result comment
+    @param userId user id from the liker
+    @param like likes or dislike
+    @returns promise object with the comment
+   */
   checkIfUserLikeExists(result,userId,like):Promise<Boolean>{
     return new Promise((resolve,reject) => {
       var list;

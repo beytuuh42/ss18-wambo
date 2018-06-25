@@ -16,10 +16,16 @@ export class LoginPage {
 
   }
 
+  /**
+    Redirecting to the register page.
+  **/
   public createAccount() {
     this.nav.push(RegisterPage);
   }
-
+  /**
+    Showing a loading animation while checking if the credentials were correct.
+    On success, redirecting to the home page, if not popping an alert.
+  **/
   public login() {
     this.showLoading()
     this.auth.login(this.registerCredentials).then(allowed => {
@@ -34,6 +40,9 @@ export class LoginPage {
       });
   }
 
+  /**
+    Creating a loading animation.
+  **/
   showLoading() {
     this.loading = this.loadingCtrl.create({
       content: 'Please wait...',
@@ -42,6 +51,13 @@ export class LoginPage {
     this.loading.present();
   }
 
+  /**
+    Dismissing the loading animation
+    Creates a new alert with the given params.
+    Redirecting to login page, if the register was successful.
+    @param title title of the pop up message
+    @param text text of the pop up message
+   */
   showError(title, text) {
     this.loading.dismiss();
 

@@ -1,3 +1,8 @@
+
+/**
+ Test config for protractor.
+ Emulating the chrome browser as a Pixel 2 XL.
+ **/
 exports.config = {
         capabilities: {
             'browserName': 'chrome',

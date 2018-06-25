@@ -1,5 +1,9 @@
 import * as jwt from 'jsonwebtoken';
 
+/**
+  Verifing the token by checking the id with the secret-key.
+  Fetching the username from the token and setting it to the current user.
+**/
 export function verifyToken(self){
   jwt.verify(localStorage.getItem('tokenId'), "plusultra", function(err, decoded) {
     if(err){

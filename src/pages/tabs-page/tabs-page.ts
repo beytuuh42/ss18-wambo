@@ -12,9 +12,11 @@ export class TabsPage {
   tab2Root: any = ProfilPage;
   mySelectedIndex: number;
 
+  /**
+    Setting the navigation index.
+    @param navParams navigation param object
+  **/
   constructor(navParams: NavParams) {
     this.mySelectedIndex = navParams.data.tabIndex || 0;
-    
   }
-
 }

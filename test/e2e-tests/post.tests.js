@@ -7,6 +7,7 @@ describe('Clicking on the login button ', function(){
       browser.get('/');
     });
 
+    // Login
     it('should validate the credentials for a successful login and display the Home view', function() {
 
       username = element(by.id('loginItem'));
@@ -31,6 +32,7 @@ describe('Clicking on the login button ', function(){
 
 describe('Clicking on a comment icon ', function(){
 
+  // deleting jwt token
   afterAll(function() {
     browser.executeScript('window.sessionStorage.clear();');
     browser.executeScript('window.localStorage.clear();');
@@ -40,6 +42,7 @@ describe('Clicking on a comment icon ', function(){
     browser.get('/');
   });
 
+  // clicking on a comment
   it('should display the post view', function() {
     commentWrapper = element.all((by.css('ion-item-sliding'))).first();
     //browser.sleep(50000);

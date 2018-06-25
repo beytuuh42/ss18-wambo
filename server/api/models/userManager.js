@@ -9,24 +9,32 @@ var userModel = require('../models/userModel.js'),
 
 
 // CREATE
+
+//creating new User object with the given param
 function createUserQuery(body) {
   return new User(body);
 };
 
 // READ
+
+//retrieving user by id
 function getUserByIdQuery(_id) {
   return User.findById(_id);
 };
 
+//retrieving user by username
 function getUserByUsernameQuery(username) {
   return User.findOne({'username':username});
 }
 
+//retrieving all users
 function getAllUsersQuery() {
   return User.find({});
 };
 
 // DELETE
+
+// deleting all users
 function deleteAllUsersQuery() {
   return User.remove({});
 };
@@ -35,6 +43,12 @@ function deleteAllUsersQuery() {
 // EXECUTES
 
 // CREATE
+
+/**
+  Creating a new user. check if the password's length is < 8, then hash and returning
+  Check if the password's length is < 8. Hash it.
+  return result as json or error message.
+**/
 var createUser = function(req, res) {
   req.body.admin  = true;
   if(req.body.password.length < 8){
@@ -52,6 +66,8 @@ var createUser = function(req, res) {
 };
 
 // READ
+
+// Executing the query and returning the result as json or error.
 var getUserById = function(req, res) {
   getUserByIdQuery(req.params.userId).exec(function(err, com) {
     if (err || com === null){
@@ -62,6 +78,8 @@ var getUserById = function(req, res) {
   });
 };
 
+
+// Executing the query and returning the result as json or error.
 var getAllUsers = function(req, res) {
   getAllUsersQuery().exec(function(err, com) {
     if (err || com === null){
@@ -74,6 +92,8 @@ var getAllUsers = function(req, res) {
   });
 };
 
+
+// Executing the query and returning the result as json or error.
 var getUserByUsername = function(req, res) {
   getUserByUsernameQuery(req.params.username).exec(function(err, com) {
     var user = req.params.username;
@@ -88,6 +108,11 @@ var getUserByUsername = function(req, res) {
   });
 }
 
+/**
+  Executing the query and returning the result as json or error.
+  The json contains whether the authentification was successful or not and a
+  potential token with the username and admin rights.
+**/
 var getUserForLogin = function(req, res){
   getUserByUsernameQuery(req.body.username).exec(function(err, user) {
 
@@ -105,9 +130,6 @@ var getUserForLogin = function(req, res){
         res.json({ success: false, message: 'Authentication failed. Wrong password.' });
       } else {
 
-        // if user is found and password is right
-        // create a token with only our given payload
-    // we don't want to pass in the entire user since that has the password
 
     const payload = {
       admin: user.admin,
@@ -130,6 +152,7 @@ var getUserForLogin = function(req, res){
 
 // DELETE
 
+// Executing the query and returning the result as json or error.
 var deleteUserById = function(req, res) {
   getUserByIdQuery(req.params.userId).remove(function(err, com) {
     if (err){
@@ -139,6 +162,8 @@ var deleteUserById = function(req, res) {
     res.json(com);
   });
 }
+
+// Executing the query and returning the result as json or error.
 var deleteAllUsers = function(req, res) {
   deleteAllUsersQuery().exec(function(err, com){
     if (err){

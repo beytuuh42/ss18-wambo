@@ -21,35 +21,43 @@ user:string = this.auth.currentUser.username;
 
   }
 
+  /**
+    Runs when the page is about to enter and become the active page.
+  **/
   ionViewWillEnter(){
     this.doRefresh(null);
   }
 
+  /**
+    Current user information is set and profile information are being loaded.
+    @param refresher refresher event object
+  **/
   doRefresh(refresher) {
     console.log('Begin async operation', refresher);
-    // this.auth.setUserInfo().then(loaded => {
-    //   if(loaded){
-    //     this.info = this.auth.getUserInfo();
-    //     this.refreshData(this.info._id);
-    //   }
-    // });
-    console.log(this.info);
-        this.info = this.auth.getUserInfo();
-        this.refreshData(this.info._id);
+    this.info = this.auth.getUserInfo();
+    this.refreshData(this.info._id);
 
     setTimeout(() => {
       if (refresher) refresher.complete();
     }, 100);
   }
 
+  /**
+    Performing a logout by removing the token from the localstorage and redirecting
+    to the loginpage.
+  **/
   public logout() {
-    this.auth.logout().then(succ => {
+    this.auth.logout().then(_ => {
       localStorage.removeItem("tokenId");
       this.appCtrl.getRootNav().push(LoginPage);
-
     });
   }
 
+  /**
+    Retrieving the total likes amount of the current user for displaying on then
+    view.
+    @param author user id
+  **/
   public getLikesAmount(author){
     this.userController.getUserTotalReceivedLikes(author)
       .then((data:any) => {
@@ -61,6 +69,11 @@ user:string = this.auth.currentUser.username;
       });
   }
 
+  /**
+    Retrieving the total diuslikes amount of the current user for displaying on then
+    view.
+    @param author user id
+  **/
   public getDislikesAmount(author){
     this.userController.getUserTotalReceivedDislikes(author)
       .then((data:any) => {
@@ -72,6 +85,11 @@ user:string = this.auth.currentUser.username;
       })
   }
 
+  /**
+    Retrieving the total comments amount of the current user for displaying on then
+    view.
+    @param author user id
+  **/
   public getCommentsAmount(author){
     this.userController.getUserTotalComments(author)
       .then((data:any) => {
@@ -83,6 +101,9 @@ user:string = this.auth.currentUser.username;
       })
   }
 
+  /**
+    Executing the functions for retrieving the profil informations.
+  **/
   refreshData(id){
     this.getLikesAmount(id);
     this.getDislikesAmount(id);

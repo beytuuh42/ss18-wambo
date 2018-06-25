@@ -22,9 +22,15 @@ export class AuthService {
   constructor(public http: HttpClient, public userController: UserController) {
   }
 
+  /**
+   * Checking for wrong input credentials.
+   * Should not be null, be valid.
+   * Storing the token on success.
+   * @param credentials username and password
+   * @returns promise object
+   */
   public login(credentials) {
     if (credentials.username === null || credentials.password === null) {
-      //return Observable.throw("Please insert credentials");
       return Promise.reject(new Error("Please insert credentials"));
     } else {
       return new Promise((resolve, reject) => {
@@ -40,6 +46,13 @@ export class AuthService {
       }
   }
 
+  /**
+   * Checking for wrong input credentials.
+   * Should not be null, password length <8, username not taken, be valid.
+   * Storing the token on success.
+   * @param credentials username and password
+   * @returns promise object
+   */
   public register(credentials) {
     return new Promise((resolve, reject) => {
       if (credentials.username === null || credentials.password === null) {
@@ -62,10 +75,19 @@ export class AuthService {
     })
   }
 
+  /**
+   * Returns the current user.
+   * @returns user object
+   */
   public getUserInfo(){
     return this.currentUser;
   }
 
+  /**
+   * Changing the current user by the given param.
+   * @param user username
+   * @returns promise object
+   */
   public setUserInfo(user){
     return new Promise((resolve, reject)=>{
       if(user){
@@ -81,6 +103,10 @@ export class AuthService {
     })
   }
 
+  /**
+   * Chaning the curret user to null.
+   * @returns promise object
+   */
   public logout() {
     return new Promise((resolve) => {
       this.currentUser = null;
@@ -88,6 +114,11 @@ export class AuthService {
     })
   }
 
+  /**
+   * Checking if the username already exists.
+   * @param username username
+   * @returns promise object
+   */
   public userExists(username:String):Promise<Boolean>{
     return this.userController.getUserByUsername(username)
       .then(data => {
@@ -102,8 +133,11 @@ export class AuthService {
       })
   }
 
+  /**
+   * Saving the token in the localStorage as 'tokenId'
+   * @param token jwttoken
+   */
   storeSession(token){
     localStorage.setItem('tokenId', token);
-    //localStorage.setItem('user', authResult.user);
   }
 }

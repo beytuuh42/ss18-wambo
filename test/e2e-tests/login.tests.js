@@ -8,11 +8,13 @@ describe('Clicking on the login button ', function(){
       loginButton = element(by.id('loginButton'));
     });
 
+    // deleting jwt token
     afterEach(function() {
       browser.executeScript('window.sessionStorage.clear();');
       browser.executeScript('window.localStorage.clear();');
     });
 
+    // failed Login
     it('should display a popup for an unsuccessful login', function() {
       browser.executeScript('window.sessionStorage.clear();');
       browser.executeScript('window.localStorage.clear();');
@@ -31,6 +33,7 @@ describe('Clicking on the login button ', function(){
       });
     });
 
+    // successful Login  
     it('should validate the credentials for a successful login and display the Home view', function() {
       var input = username.element(by.css('input'));
       browser.actions().mouseMove(input).click();

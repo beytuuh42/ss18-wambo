@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var ObjectId = Schema.ObjectId;
 
+// Schema model for the comment object
 var schema = new Schema({
   content: {
     type: String,

@@ -9,11 +9,13 @@ describe('Clicking on the create account button ', function(){
       createAccountButton = element(by.id('createAccountButton'));
     });
 
+    // deleting jwt token
     afterEach(function() {
       browser.executeScript('window.sessionStorage.clear();');
       browser.executeScript('window.localStorage.clear();');
     });
 
+    // creating a new account with pseodo random username and password of length 8
     it('should successfully sign up and show a pop up saying "Account created"', function() {
       createAccountButton.click();
       browser.sleep(500);

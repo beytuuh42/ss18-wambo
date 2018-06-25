@@ -6,23 +6,30 @@ var Comment = commentModel.schema;
 
 
 // CREATE
+
+//creating new Comment object with the given param
 function createCommentQuery(body) {
   return new Comment(body);
 };
 
 // READ
+
+//retrieving comment by id
 function getCommentByIdQuery(_id) {
   return Comment.findById(_id);
 };
 
+//retrieving nested comments by id and sorting them
 function getNestedCommentSorted(value, _id, sortBy) {
   return Comment.find({value: _id}, {}, {$sort: {sortBy: 1}});
 }
 
+//retrieving all comments
 function getAllCommentsQuery() {
   return Comment.find({});
 };
 
+//retrieving amount of likes an user received by authorid
 function getUserTotalReceivedLikesQuery(id){
   return Comment.aggregate([
     { $match: { "author": new mongoose.Types.ObjectId(id) }},
@@ -35,6 +42,7 @@ function getUserTotalReceivedLikesQuery(id){
   ]);
 }
 
+//retrieving amount of dislikes an user received by authorid
 function getUserTotalReceivedDislikesQuery(id){
   return Comment.aggregate([
     { $match: { "author": new mongoose.Types.ObjectId(id) }},
@@ -47,6 +55,7 @@ function getUserTotalReceivedDislikesQuery(id){
   ]);
 }
 
+//retrieving amount of comments an user made by authorid
 function getUserTotalCommentsQuery(id){
   return Comment.aggregate([
     { $match: { "author" : new mongoose.Types.ObjectId(id) }},
@@ -60,6 +69,8 @@ function getUserTotalCommentsQuery(id){
 }
 
 // UPDATE
+
+//changing comment by its id and body content
 function setCommentByIdQuery(_id, body) {
   return Comment.findOneAndUpdate({
     _id
@@ -68,6 +79,7 @@ function setCommentByIdQuery(_id, body) {
   });
 };
 
+//deleting all comments
 // DELETE
 function deleteAllCommentsQuery() {
   return Comment.remove({});
@@ -79,6 +91,8 @@ function deleteAllCommentsQuery() {
 
 
 // CREATE
+
+// Executing the query and returning the result as json or error.
 var createComment = function(req, res) {
   createCommentQuery(req.body).save(function(err, com) {
     if (err){
@@ -91,6 +105,8 @@ var createComment = function(req, res) {
 };
 
 //READ
+
+// Executing the query and returning the result as json or error.
 var getCommentById = function(req, res) {
   getCommentByIdQuery(req.params.commentId).exec(function(err, com) {
     if (err){
@@ -102,6 +118,8 @@ var getCommentById = function(req, res) {
   });
 };
 
+
+// Executing the query and returning the result as json or error.
 var getAllComments = function(req, res) {
   getAllCommentsQuery().exec(function(err, com) {
     if (err){
@@ -113,7 +131,7 @@ var getAllComments = function(req, res) {
     }
   });
 };
-
+// Executing the query and returning the result as json or error.
 var getUserTotalReceivedLikes = function(req, res) {
   getUserTotalReceivedLikesQuery(req.params.userId).exec(function(err,com){
     if (err){
@@ -125,7 +143,7 @@ var getUserTotalReceivedLikes = function(req, res) {
   });
 };
 
-
+// Executing the query and returning the result as json or error.
 var getUserTotalReceivedDislikes = function(req, res) {
   getUserTotalReceivedDislikesQuery(req.params.userId).exec(function(err,com){
     if (err){
@@ -136,7 +154,7 @@ var getUserTotalReceivedDislikes = function(req, res) {
     res.json(com);
   });
 };
-
+// Executing the query and returning the result as json or error.
 var getUserTotalComments = function(req, res) {
   getUserTotalCommentsQuery(req.params.userId).exec(function(err,com){
     if (err){
@@ -147,6 +165,8 @@ var getUserTotalComments = function(req, res) {
     res.json(com);
   })
 }
+
+// Find all descendant of a parent comment, push them in an array and return it
 var getNestedCommentsByParentId = function(req, res) {
   var x = [];
   var curLength = 0;
@@ -176,17 +196,11 @@ var getNestedCommentsByParentId = function(req, res) {
     });
 };
 
-// var getAllParentsById = function(req, res) {
-//   getCommentByIdQuery(req.params.commentId, 'ancestors').exec(function(err, com) {
-//     if (err)
-//       throw err;
-//     res.json(com);
-//   });
-// };
-
 
 
 //UPDATE
+
+// Executing the query and returning the result as json or error.
 var setCommentById = function(req, res) {
   setCommentByIdQuery(req.params.commentId, req.body).exec(function(err, com) {
     if (err){
@@ -200,6 +214,8 @@ var setCommentById = function(req, res) {
 
 
 //DELETE
+
+// Executing the query and returning the result as json or error.
 var deleteAllComments = function(req, res) {
   deleteAllCommentsQuery().exec(function(err, com){
     if (err){
@@ -211,6 +227,7 @@ var deleteAllComments = function(req, res) {
   });
 };
 
+// Executing the query and returning the result as json or error.
 var deleteCommentById = function(req, res) {
   getCommentByIdQuery(req.params.commentId).remove(function(err, com) {
     if (err){

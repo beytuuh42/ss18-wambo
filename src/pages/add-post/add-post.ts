@@ -11,6 +11,10 @@ export class AddPostPage {
   message = { content: ''}
   ancestors: Array<any> = [];
 
+  /**
+    Retrieving the ancestors parameter which was send when this view has been created.
+    Popping the view when clicking on the back button.
+  **/
   constructor(public navCtrl: NavController, public params: NavParams, public apiProvider: ApiProvider, platform: Platform, public alertCtrl: AlertController) {
     this.ancestors = params.get('ancestors')
     let backAction = platform.registerBackButtonAction(() => {
@@ -19,9 +23,17 @@ export class AddPostPage {
     }, 2)
   }
 
+
+  /**
+    Creating a new comment with the message content and the ancestor array, Popping
+    the view from the stack afterwards.
+    Checks if the message is empty and pops a message box if so.
+    @param title title of the pop up message
+    @param text text of the pop up message
+   */
   sendPost() {
     if(this.message.content == ''){
-      this.showError();
+      this.showError('Fail', 'Please enter a message');
     } else {
       this.apiProvider.sendPost(this.message).then((result) => {
         this.apiProvider.pushAncestors(result, this.ancestors).then((x) => {
@@ -34,10 +46,15 @@ export class AddPostPage {
 
   }
 
-  showError() {
+  /**
+    Creates a new alert with the given params.
+    @param title title of the pop up message
+    @param text text of the pop up message
+   */
+  showError(title,text) {
     let alert = this.alertCtrl.create({
-      title: 'Fail',
-      subTitle: "Please enter a message",
+      title: title,
+      subTitle: text,
       buttons: ['OK']
     });
     alert.present();
