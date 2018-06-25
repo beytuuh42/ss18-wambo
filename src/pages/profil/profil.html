@@ -5,37 +5,44 @@
     </ion-title>
   </ion-navbar>
 </ion-header>
-
 <ion-content>
+<div class="head">
+  <button ion-button [clear]="isClear" small>
+  <ion-note (click)="logout()">Logout</ion-note>
+</button>
+</div>
+<div class="top">
+    <div class="top-items" >
+      <ion-img width="80" height="80" src="../assets/imgs/avatar.png" style="background: transparent">
+      </ion-img>
+        <h2>{{user}}</h2>
+    </div>
+
+</div>
+<div class="body">
+
+<!--
+  <ion-list-header  class="header">
+    {{user}}s Statistic
+  </ion-list-header> -->
   <ion-list>
-
-      <ion-item>
-        <p id = "profilCommentsAmount" class = "profileStatistics">{{comments}} Comments</p>
-      </ion-item>
-
-      <ion-item>
-        <p id = "profilLikesAmount" class = "profileStatistics">{{likes}} Likes</p>
-      </ion-item>
-
-      <ion-item>
-        <p id = "profilDislikessAmount" class = "profileStatistics">{{dislikes}} Dislikes</p>
-      </ion-item>
-
-      <ion-item>
-        <p id = "profilDislikessAmount" class = "profileStatistics">Nutzungsbedinungen</p>
-      </ion-item>
-
-      <ion-item>
-        <p id = "profilDislikessAmount" class = "profileStatistics">Datenschutzerklärung</p>
-      </ion-item>
+    <ion-item>
+      Comments: {{comments}}
+    </ion-item>
+    <ion-item>
+      Likes: {{likes}}
+    </ion-item>
+    <ion-item>
+      Dislikes: {{dislikes}}
+    </ion-item>
+    <ion-item>
+      Terms of Use
+    </ion-item>
+    <ion-item>
+      Privacy Statement
+    </ion-item>
 
   </ion-list>
 
-  <ion-fab left bottom>
-    <button id="profileLogoutButton" ion-button (click)="logout()">
-        <ion-icon name="md-log-out"></ion-icon>
-         logout
-      </button>
-  </ion-fab>
-
+  </div>
 </ion-content>
