@@ -154,7 +154,7 @@ var getNestedCommentsByParentId = function(req, res) {
   getCommentByIdQuery(req.params.commentId)
     .then((com) => {
       curLength = com.ancestors.length;
-      Comment.find({ancestors: req.params.commentId}, {}, {$sort: {likes: 1}})
+      Comment.find({ancestors: req.params.commentId}, {}, {$sort: {created_at: 1}})
         .exec((err, com, next) => {
           if (err){
             err.statuscode = '400';

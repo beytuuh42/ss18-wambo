@@ -26,11 +26,11 @@ export class LoginPage {
       if (allowed) {
         this.nav.setRoot(TabsPage);
       } else {
-        this.showError("Access Denied");
+        this.showError("Error", "Wrong credentials.");
       }
     },
       error => {
-        this.showError(error);
+        this.showError("Error", "Wrong credentials.");
       });
   }
 
@@ -42,11 +42,11 @@ export class LoginPage {
     this.loading.present();
   }
 
-  showError(text) {
+  showError(title, text) {
     this.loading.dismiss();
 
     let alert = this.alertCtrl.create({
-      title: 'Fail',
+      title: title,
       subTitle: text,
       buttons: ['OK']
     });

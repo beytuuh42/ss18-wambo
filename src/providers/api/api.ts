@@ -10,7 +10,7 @@ import { AuthService } from '../auth-service/auth-service';
 
 let url = "proxy/";
 let prefixComments = "comments/";
-let prefixNested = "nested/";
+let prefixNested = "nested-comments/";
 let posts = [];
 let comments = [];
 let path = "";
@@ -128,21 +128,24 @@ export class ApiProvider {
       this.getCommentById(commentId).then((result: any) => {
         this.checkIfUserLikeExists(result,userId,"like").then(exists => {
           if(exists){
-            return false;
+            const index: number = result.liked_by.indexOf(userId);
+            if (index !== -1) {
+                result.liked_by.splice(index, 1);
+                result.likes -= 1;
+            }
           } else {
             result.liked_by.push(userId);
             result.likes += 1;
-            console.log(result);
-            return this.http.put<any[]>(path, result, {
-              headers: jsonHeader,
-              observe: 'response'
-            })
-              .subscribe(res => {
-                resolve(res);
-              }, (err) => {
-                reject(new Error("Error incrementing like: " + err.message));
-              });
           }
+          return this.http.put<any[]>(path, result, {
+            headers: jsonHeader,
+            observe: 'response'
+          })
+            .subscribe(res => {
+              resolve(res);
+            }, (err) => {
+              reject(new Error("Error incrementing like: " + err.message));
+            });
         })
       });
     });
@@ -154,20 +157,24 @@ export class ApiProvider {
       this.getCommentById(commentId).then((result: any) => {
         this.checkIfUserLikeExists(result,userId,"dislike").then(exists => {
           if(exists){
-            return false;
+            const index: number = result.disliked_by.indexOf(userId);
+            if (index !== -1) {
+                result.disliked_by.splice(index, 1);
+                result.dislikes -= 1;
+            }
           } else {
             result.disliked_by.push(userId);
             result.dislikes += 1;
-            return this.http.put<any[]>(path, result, {
-              headers: jsonHeader,
-              observe: 'response'
-            })
-              .subscribe(res => {
-                resolve(res);
-              }, (err) => {
-                reject(new Error("Error incrementing like: " + err.message));
-              });
           }
+          return this.http.put<any[]>(path, result, {
+            headers: jsonHeader,
+            observe: 'response'
+          })
+            .subscribe(res => {
+              resolve(res);
+            }, (err) => {
+              reject(new Error("Error incrementing like: " + err.message));
+            });
         })
       });
     });
@@ -226,7 +233,8 @@ export class ApiProvider {
       } else {
         list = result.disliked_by;
       }
-      if(typeof list != 'undefined' && list instanceof Array){
+      console.log(list.length);
+      if(typeof list != 'undefined' && list instanceof Array && list.length != 0){
         list.forEach((x:any) => {
           if(x == userId){
             resolve(true);

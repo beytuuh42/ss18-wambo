@@ -6,6 +6,10 @@
     {
       "path": "/proxy",
       "proxyUrl": "http://localhost:3000/api"
+    },
+    {
+      "path": "/test",
+      "proxyUrl" : "http://localhost:8100"
     }
   ],
   "integrations": {}

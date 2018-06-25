@@ -133,8 +133,10 @@ export class HomePage {
   }
 
   incrementLike(post) {
+    console.log("increment");
     this.apiProvider.incrementLike(post._id, this.userId).then((result:any) => {
       post.likes = result.body.likes;
+
       // this.posts.find(x => x._id === post._id).likes = result.body.likes;
     }, (err) => {
       Promise.reject(new Error("Error incremending like: " + err.message));
