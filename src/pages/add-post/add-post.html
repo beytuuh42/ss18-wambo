@@ -6,7 +6,7 @@
 
   <ion-navbar>
     <ion-title>
-      <p>Creating new Comment</p>
+      <p id="addPostTitle">Creating new Comment</p>
     </ion-title>
   </ion-navbar>
 
@@ -18,10 +18,10 @@
     <form (ngSubmit)="sendPost()">
       <ion-item>
         <ion-label floating>Enter your Message:</ion-label>
-        <ion-input type="text" [(ngModel)]="message.content" name="content"></ion-input>
+        <ion-input id="addPostMessage" type="text" [(ngModel)]="message.content" name="content"></ion-input>
       </ion-item>
 
-      <button ion-button primary type="submit" block>send</button>
+      <button id="addPostSendButton" ion-button primary type="submit" block>Send</button>
     </form>
 
   </ion-card>

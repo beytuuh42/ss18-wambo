@@ -39,7 +39,9 @@ $colors: (
   danger:     #f53d3d,
   light:      #c8c8c8,
   dark:       #222,
-
+  white:      #fff,
+  primaryGreen: #56CA96,
+  secondaryGreen: #399F8B,
 );
 
 
@@ -48,18 +50,23 @@ $colors: (
 // iOS only Sass variables can go here
 
 // //top tabs
-// $toolbar-md-background: color($colors, primary);
-// $toolbar-md-tab-color-active: color($colors, light);
+// $toolbar-md-background: color($colors, secondaryGreen);
+// $toolbar-md-tab-color-active: color($colors, white);
 // $tabs-md-tab-color-inactive: color($colors, dark);
 
 //bottom tabs
-// $tabs-md-background: color($colors, primary);
-// $tabs-md-tab-color-active: color($colors, light);
-// $tabs-md-tab-color-inactive: color($colors, dark);
+$tabs-md-background: color($colors, secondaryGreen);
+$tabs-md-tab-color-active: color($colors, white);
+$tabs-md-tab-color-inactive: color($colors, dark);
+$tabs-md-tab-icon-color-active: color($colors, white);
+$tabs-md-tab-icon-color-inactive: color($colors, dark);
 //
 //
-$tabs-ios-tab-color-active: color($colors, primary);
-$tabs-ios-tab-color-inactive: color($colors, light);
+$tabs-ios-background: color($colors, secondaryGreen);
+$tabs-ios-tab-color-active: color($colors, white);
+$tabs-ios-tab-color-inactive: color($colors, dark);
+$tabs-ios-tab-icon-color-active: color($colors, white);
+$tabs-ios-tab-icon-color-inactive: color($colors, dark);
 
 // App Material Design Variables
 // --------------------------------------------------

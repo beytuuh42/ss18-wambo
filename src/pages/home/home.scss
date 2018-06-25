@@ -1,4 +1,5 @@
 page-home {
+
   ion-item-sliding {
     margin-bottom: 10px;
   }
@@ -14,5 +15,12 @@ page-home {
   }
   ion-fab[bottom] {
     bottom:15px;
+  }
+  #androidFab{
+    background: color($colors, secondaryGreen);
+  }
+
+  #iosFab{
+    background: color($colors, secondaryGreen);
   }
 }

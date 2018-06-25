@@ -14,12 +14,14 @@ describe('Clicking on the login button ', function(){
     });
 
     it('should display a popup for an unsuccessful login', function() {
+      browser.executeScript('window.sessionStorage.clear();');
+      browser.executeScript('window.localStorage.clear();');
       var input = username.element(by.css('input'));
-      input.click();
+      browser.actions().mouseMove(input).click();
       input.sendKeys('admin');
 
       var input2 = password.element(by.css('input'));
-      input2.click();
+      browser.actions().mouseMove(input2).click();
       input2.sendKeys('admin');
 
       loginButton.click().then(function() {
@@ -31,11 +33,11 @@ describe('Clicking on the login button ', function(){
 
     it('should validate the credentials for a successful login and display the Home view', function() {
       var input = username.element(by.css('input'));
-      input.click();
+      browser.actions().mouseMove(input).click();
       input.sendKeys('admin');
 
       var input2 = password.element(by.css('input'));
-      input2.click();
+      browser.actions().mouseMove(input2).click();
       input2.sendKeys('adminadmin');
 
       loginButton.click().then(function() {
