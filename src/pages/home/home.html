@@ -39,7 +39,7 @@
           </ion-row>
         </ion-footer>
       </ion-item>
-      <ion-item-options *ngIf="post.content!='[deleted]'" side="right">
+      <ion-item-options *ngIf="post.content!='[deleted]' && post.author === this.auth.currentUser._id" side="right">
         <button ion-button (click)="presendDelete(post)">delete</button>
       </ion-item-options>
     </ion-item-sliding>
