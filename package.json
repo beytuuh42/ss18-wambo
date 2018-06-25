@@ -45,7 +45,9 @@
     "morgan": "^1.9.0",
     "node-pre-gyp": "^0.10.0",
     "password-hash": "^1.2.2",
+    "protractor": "^5.3.2",
     "rxjs": "5.5.10",
+    "superagent": "^3.8.3",
     "sw-toolbox": "3.6.0",
     "zone.js": "0.8.26"
   },

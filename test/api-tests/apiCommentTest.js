@@ -166,7 +166,7 @@ describe('API endpoint /comments/:commentId', function() {
 });
 
 
-describe('API endpoint /nested/:commentId', function() {
+describe('API endpoint /nested-comments/:commentId', function() {
   var author = mongoose.Types.ObjectId('56cb91bdc3464f14678934ca');
   var commentIdChild1 =  mongoose.Types.ObjectId('56cb91bdc3464f14678934c1');
   var commentIdChild2 =  mongoose.Types.ObjectId('56cb91bdc3464f14678934c3');

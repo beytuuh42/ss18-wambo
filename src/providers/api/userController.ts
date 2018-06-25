@@ -83,7 +83,7 @@ export class UserController {
   }
 
   login(username:string,password:string){
-    path = url + "/login";
+    path = url + "auth/login";
     return new Promise((resolve, reject) => {
       return this.http.post<any>(path,{username,password})
         .subscribe(data => {

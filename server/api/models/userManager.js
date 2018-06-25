@@ -37,6 +37,9 @@ function deleteAllUsersQuery() {
 // CREATE
 var createUser = function(req, res) {
   req.body.admin  = true;
+  if(req.body.password.length < 8){
+    return false;
+  }
   req.body.password = userModel.encryptPassword(req.body.password);
 
   createUserQuery(req.body).save(function(err, user) {
@@ -105,11 +108,12 @@ var getUserForLogin = function(req, res){
         // if user is found and password is right
         // create a token with only our given payload
     // we don't want to pass in the entire user since that has the password
+
     const payload = {
       admin: user.admin,
       user: user.username
     };
-        var token = jwt.sign(payload, "plusultra", {
+        var token = jwt.sign(payload, config.secret, {
           expiresIn: 86400 // expires in 24 hours
         });
 

@@ -31,8 +31,8 @@ commentRoutes(app);
 var userRoutes = require('./server/api/routes/userRoutes');
 userRoutes(app);
 
-var authenticateRoutes = require('./server/api/routes/authenticateRoutes');
-authenticateRoutes(app);
+// var authenticateRoutes = require('./server/api/routes/authenticateRoutes');
+// authenticateRoutes(app);
 
 
 

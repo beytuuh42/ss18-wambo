@@ -12,12 +12,12 @@
         <ion-col>
           <ion-list inset>
 
-            <ion-item id ="loginItem">
-              <ion-input type="text" placeholder="Username" name="username" [(ngModel)]="registerCredentials.username" required></ion-input>
+            <ion-item >
+              <ion-input id ="loginItem" type="text" placeholder="Username" name="username" [(ngModel)]="registerCredentials.username" required></ion-input>
             </ion-item>
 
-            <ion-item>
-              <ion-input type="password" placeholder="Password" name="password" [(ngModel)]="registerCredentials.password" required></ion-input>
+            <ion-item >
+              <ion-input id ="passwordItem" type="password" placeholder="Password" name="password" [(ngModel)]="registerCredentials.password" required></ion-input>
             </ion-item>
 
           </ion-list>
@@ -26,14 +26,14 @@
 
       <ion-row>
         <ion-col class="signup-col">
-          <button ion-button class="submit-btn" full type="submit" [disabled]="!registerForm.form.valid">Login</button>
+          <button id = "loginButton" ion-button class="submit-btn" full type="submit" [disabled]="!registerForm.form.valid" name="login">Login</button>
         </ion-col>
       </ion-row>
 
     </form>
     <ion-row>
       <ion-col class="signup-col">
-        <button ion-button class="register-btn" block clear (click)="createAccount()">Create New Account</button>
+        <button  id = "createAccountButton" ion-button class="register-btn" block clear (click)="createAccount()">Create New Account</button>
       </ion-col>
     </ion-row>
   </div>
