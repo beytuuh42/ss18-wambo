@@ -1,12 +1,10 @@
 <!-- main navigation -->
 <ion-header>
-  <ion-toolbar showWhen="ios">
-    <ion-buttons end>
-      <button (click)="addPost()" ion-button light class="AddPostButton">
-        Add
-      </button>
-    </ion-buttons>
-  </ion-toolbar>
+  <ion-navbar showWhen="ios">
+    <ion-title>
+      <p>WAMBO</p>
+    </ion-title>
+  </ion-navbar>
 </ion-header>
 
 <ion-content padding>
@@ -15,25 +13,25 @@
   </ion-refresher>
   <ion-list>
     <ion-item-sliding *ngFor="let post of posts">
-      <ion-item class="warpper" [ngStyle]="{'background-color': post.color}" id="{{post._id}}">
+      <ion-item class="warpper" [ngStyle]="{'background-color': post.color}" id="{{post._id}}" (click)="pushParams(post._id)">
         <p text-wrap *ngIf="post.content=='[deleted]'" style="font-style:italic;">{{post.content}}</p>
         <p text-wrap *ngIf="post.content!='[deleted]'">{{post.content}}</p>
         <ion-footer>
           <ion-row>
             <ion-col>
-              <button ion-button icon-left clear small (click)="incrementLike(post)">
+              <button ion-button icon-left clear small (click)="incrementLike(post);$event.stopPropagation();">
               <ion-icon name="thumbs-up"></ion-icon>
               <div>{{post.likes}}</div>
             </button>
             </ion-col>
             <ion-col>
-              <button ion-button icon-left clear small (click)="incrementDislike(post)">
+              <button ion-button icon-left clear small (click)="incrementDislike(post);$event.stopPropagation();">
               <ion-icon name="thumbs-down"></ion-icon>
               <div>{{post.dislikes}}</div>
             </button>
             </ion-col>
             <ion-col>
-              <button ion-button icon-left clear small (click)="pushParams(post._id)">
+              <button ion-button icon-left clear small >
               <ion-icon name="text"></ion-icon>
               <div>{{post.comments}}</div>
             </button>
@@ -41,7 +39,7 @@
           </ion-row>
         </ion-footer>
       </ion-item>
-      <ion-item-options side="right">
+      <ion-item-options *ngIf="post.content!='[deleted]'" side="right">
         <button ion-button (click)="presendDelete(post)">delete</button>
       </ion-item-options>
     </ion-item-sliding>
@@ -50,6 +48,12 @@
 
   <ion-fab showWhen="android" right bottom #fab2>
     <button ion-fab (click)="pushAddPost()"><ion-icon name="md-add"></ion-icon></button>
+  </ion-fab>
+
+  <ion-fab center bottom  showWhen="ios">
+      <button ion-fab (click)="pushAddPost()">
+        <ion-icon name="ios-add"></ion-icon>
+      </button>
   </ion-fab>
 
 </ion-content>

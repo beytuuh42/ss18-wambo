@@ -9,16 +9,20 @@
       <p>Comments</p>
     </ion-title>
   </ion-navbar>
-
 </ion-header>
+
+<!-- <ion-buttons showWhen="ios" end>
+  <button (click)="pushAddPost(post.ancestors)" ion-button light class="AddPostButton">
+  Add Post
+</button>
+</ion-buttons> -->
 
 <ion-content padding>
   <ion-refresher (ionRefresh)="doRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
   <ion-list>
-
-    <ion-item-sliding>
+    <ion-item-sliding  >
       <ion-item id="{{post._id}}" [ngStyle]="{'background-color': post.color}">
         <div class="commentHeader">{{post.username}}</div>
         <p text-wrap *ngIf="post.content=='[deleted]'" style="font-style:italic;">{{post.content}}</p>
@@ -37,15 +41,13 @@
               <div>{{post.dislikes}}</div>
             </button>
             </ion-col>
-            <ion-col>
-              <button ion-button icon-left clear small (click)="pushAddPost(post.ancestors)">
-            <ion-icon name="add-circle"></ion-icon>
-          </button>
-            </ion-col>
+            <!-- <ion-col>
+              <ion-icon icon-left clear small name="add-circle"></ion-icon>
+            </ion-col> -->
           </ion-row>
         </ion-footer>
       </ion-item>
-      <ion-item-options side="right">
+      <ion-item-options *ngIf="post.content!='[deleted]'" side="right">
         <button ion-button (click)="presendDelete(post)">delete</button>
       </ion-item-options>
     </ion-item-sliding>
@@ -78,27 +80,27 @@
 
 
     <!-- </ion-card> -->
-    <ion-item-sliding class="secondLevel" *ngFor="let comment of comments" >
-      <ion-item class="warpper" [ngStyle]="{'background-color': comment.color}" id="{{comment._id}}">
+    <ion-item-sliding class="secondLevel" *ngFor="let comment of comments">
+      <ion-item class="warpper" [ngStyle]="{'background-color': comment.color}" id="{{comment._id}}" (click)="pushParams(comment._id)">
         <div class="commentHeader">{{comment.username}}</div>
         <p text-wrap *ngIf="comment.content=='[deleted]'" style="font-style:italic;">{{comment.content}}</p>
         <p text-wrap *ngIf="comment.content!='[deleted]'">{{comment.content}}</p>
         <ion-footer>
           <ion-row>
             <ion-col>
-              <button ion-button icon-left clear small (click)="incrementLike(comment)">
+              <button ion-button icon-left clear small (click)="incrementLike(comment);$event.stopPropagation();">
               <ion-icon name="thumbs-up"></ion-icon>
               <div>{{comment.likes}}</div>
             </button>
             </ion-col>
             <ion-col>
-              <button ion-button icon-left clear small (click)="incrementDislike(comment)">
+              <button ion-button icon-left clear small (click)="incrementDislike(comment);$event.stopPropagation();">
               <ion-icon name="thumbs-down"></ion-icon>
               <div>{{comment.dislikes}}</div>
             </button>
             </ion-col>
             <ion-col>
-              <button ion-button icon-left clear small (click)="pushParams(comment._id)">
+              <button ion-button icon-left clear small>
               <ion-icon name="text"></ion-icon>
               <div>{{comment.comments}}</div>
             </button>
@@ -106,9 +108,19 @@
           </ion-row>
         </ion-footer>
       </ion-item>
-      <ion-item-options side="right">
+      <ion-item-options *ngIf="comment.content!='[deleted]'" side="right">
         <button ion-button (click)="presendDelete(comment)" id ="commentDeleteButton">delete</button>
       </ion-item-options>
     </ion-item-sliding>
   </ion-list>
+
+  <ion-fab showWhen="android" right bottom #fab2>
+    <button ion-fab (click)="pushAddPost(post.ancestors)"><ion-icon name="md-add"></ion-icon></button>
+  </ion-fab>
+
+  <ion-fab center bottom showWhen="ios">
+      <button ion-fab (click)="pushAddPost(post.ancestors)">
+        <ion-icon name="ios-add"></ion-icon>
+      </button>
+  </ion-fab>
 </ion-content>

@@ -1,55 +1,29 @@
 <ion-header>
-  <ion-toolbar showWhen="ios" >
-
-  </ion-toolbar>
+  <ion-navbar showWhen="ios">
+    <ion-title>
+      <p>WAMBO</p>
+    </ion-title>
+  </ion-navbar>
 </ion-header>
 
 <ion-content>
   <ion-list>
         <ion-list>
-        <button ion-item (click)="itemSelected(item)">
-         Statistic
-        </button>
-      </ion-list>
-
-      <ion-list>
-        <button ion-item (click)="itemSelected(item)">
-         Your wambooos
-        </button>
-      </ion-list>
-
-      <ion-list>
-        <button ion-item (click)="itemSelected(item)">
-        Your Comments
-        </button>
-      </ion-list>
-
-      <ion-row>
-            <ion-col>
-            <button ion-button color="primary" clear small icon-start>
-              <ion-icon name='text'></ion-icon>
-              {{comments}} Comments
-            </button>
-          </ion-col>
-
-            <ion-col>
-              <button ion-button color="primary" clear small icon-start>
-              <ion-icon name='thumbs-up'></ion-icon>
-              {{likes}} Likes
-              </button>
-            </ion-col>
-
-            <ion-col>
-              <button ion-button color="primary" clear small icon-start>
-              <ion-icon name='thumbs-down'></ion-icon>
-              {{dislikes}} Dislikes
-              </button>
-            </ion-col>
-          </ion-row>
         <ion-item>
-          <button ion-button (click)="logout()">
-            <ion-icon name="ios-log-out"></ion-icon>
-          </button>
+          {{comments}} Comments
         </ion-item>
+      </ion-list>
+
+      <ion-list>
+        <ion-item>
+          {{likes}} Likes
+        </ion-item>
+      </ion-list>
+
+      <ion-list>
+        <ion-item>
+        {{dislikes}} Dislikes
+      </ion-item>
+      </ion-list>
   </ion-list>
 </ion-content>

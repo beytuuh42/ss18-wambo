@@ -41,6 +41,7 @@ import { AuthService } from '../providers/auth-service/auth-service';
       tabsPlacement: 'top',
       platforms: {
         ios: {
+          tabsHideOnSubPages: false,
           tabsPlacement: 'bottom'
         }
       }
