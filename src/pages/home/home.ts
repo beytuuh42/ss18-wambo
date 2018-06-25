@@ -94,23 +94,23 @@ export class HomePage {
             console.log('Cancel clicked');
           }
         },
-        {
-          text: 'Delete',
-          handler: () => {
-            if(post.author == this.auth.currentUser._id){
-              this.delete(post);
-              console.log('Post deleted');
-              this.doRefresh(null);
-            } else {
-              let innerAlert = this.alertCtrl.create({
-                title: 'Fail',
-                subTitle: "You can only delete your own posts",
-                buttons: ['OK']
-              });
-              innerAlert.present();
-            }
-          }
-        }
+        // {
+        //   text: 'Delete',
+        //   handler: () => {
+        //     if(post.author == this.auth.currentUser._id){
+        //       this.delete(post);
+        //       console.log('Post deleted');
+        //       this.doRefresh(null);
+        //     } else {
+        //       let innerAlert = this.alertCtrl.create({
+        //         title: 'Fail',
+        //         subTitle: "You can only delete your own posts",
+        //         buttons: ['OK']
+        //       });
+        //       innerAlert.present();
+        //     }
+        //   }
+        // }
       ]
     });
     alert.present();
