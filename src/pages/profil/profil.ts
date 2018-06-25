@@ -15,6 +15,7 @@ dislikes:number;
 author:number;
 comments:number;
 info:any;
+user:string = this.auth.currentUser.username;
 
   constructor(public navCtrl: NavController, private auth: AuthService, public userController:UserController, public appCtrl: App) {
 

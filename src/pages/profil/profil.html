@@ -6,32 +6,24 @@
   </ion-navbar>
 </ion-header>
 
+
 <ion-content>
+  <ion-list-header  class="head">
+    {{user}}s Statistic
+  </ion-list-header>
   <ion-list>
-    <ion-list>
-      <ion-item>
-        {{comments}} Comments
-      </ion-item>
-    </ion-list>
-
-    <ion-list>
-      <ion-item>
-        {{likes}} Likes
-      </ion-item>
-    </ion-list>
-
-    <ion-list>
-      <ion-item>
-        {{dislikes}} Dislikes
-      </ion-item>
-    </ion-list>
-
+    <ion-item>
+      Comments: {{comments}}
+    </ion-item>
+    <ion-item>
+      Likes: {{likes}}
+    </ion-item>
+    <ion-item>
+      Dislikes: {{dislikes}}
+    </ion-item>
+    <ion-item ion-item (click)="logout()" color="green">
+      <ion-note item-start>Logout</ion-note>
+      <ion-icon name="ios-log-out" item-right></ion-icon>
+    </ion-item>
   </ion-list>
-  <ion-item>
-    <button ion-button (click)="logout()">
-          <ion-icon name="md-log-out"></ion-icon>
-           logout
-        </button>
-  </ion-item>
-
 </ion-content>
