@@ -30,11 +30,19 @@ export class PostPage {
 
   }
 
+  /**
+    Runs when the page is about to enter and become the active page.
+    Verifing the token and fetching the username of it, also fetching posts.
+  **/
   ionViewWillEnter(){
     verifyToken(this);
     this.doRefresh(null);
   }
 
+  /**
+    Fetching post by ID.
+    @param refresher refresher event object
+  **/
   doRefresh(refresher) {
     this.getPostById(this.id);
     setTimeout(() => {
@@ -42,6 +50,10 @@ export class PostPage {
     }, 100);
   }
 
+  /**
+    Deleting posts by ID and refreshing posts.
+    @param post post object
+  **/
   delete(post) {
     this.apiProvider.deletePostById(post._id).then(data => {
       this.getPosts();
@@ -49,6 +61,11 @@ export class PostPage {
     })
   }
 
+  /**
+    Fetching post by id and the author for displaying the creator of the post.
+    Refreshing post and comments object.
+    @param id id of the post
+  **/
   getPostById(id){
   this.apiProvider.getCommentById(id)
     .then((data:any) => {
@@ -63,6 +80,9 @@ export class PostPage {
 
   }
 
+  /**
+    Fetching posts.
+  **/
   getPosts() {
     this.apiProvider.getPosts()
       .then(data => {
@@ -70,6 +90,9 @@ export class PostPage {
       })
   }
 
+  /**
+    Creating a comment and pushing it's ancestors.
+  **/
   addComment() {
     this.apiProvider.sendPost(this.comment).then((result) => {
       this.apiProvider.pushAncestors(result, this.post.ancestors).then((x) => {
@@ -79,6 +102,10 @@ export class PostPage {
     });
   }
 
+  /**
+    Incrementing the likes of a comment.
+    @param comment comment object
+  **/
   incrementLike(comment) {
     this.apiProvider.incrementLike(comment._id, this.userId).then((result:any) => {
       comment.likes = result.body.likes;
@@ -87,6 +114,10 @@ export class PostPage {
     });
   }
 
+  /**
+    Incrementing the likes of a comment.
+    @param comment comment object
+  **/
   incrementDislike(comment) {
     this.apiProvider.incrementDislike(comment._id, this.userId).then((result:any) => {
       comment.dislikes = result.body.dislikes;
@@ -96,7 +127,6 @@ export class PostPage {
   }
 
   getComments(){
-    console.log(this.post._id);
     this.apiProvider.getAllChildrenByParent(this.post._id)
       .then((data:any) => {
         data.forEach((x: any) => {
@@ -111,6 +141,9 @@ export class PostPage {
       });
   }
 
+  /**
+    Popping a message box and fetching posts.
+  **/
   addPost() {
     let addPostmodal = this.modalCtrl.create(AddPostPage)
     addPostmodal.onDidDismiss(() => {
@@ -119,15 +152,28 @@ export class PostPage {
     addPostmodal.present()
   }
 
+
+  /**
+    Pushing the clicked post into the post page, for rendering as the parent.
+    @param post post object
+  **/
   pushParams(post) {
     this.navCtrl.push(PostPage, { 'post': post });
   }
 
+  /**
+    Displaying add post page.
+  **/
   pushAddPost(ancestors) {
     this.navCtrl.push(AddPostPage, { 'ancestors': ancestors });
   }
 
-  //delete confirm alert
+  /**
+    Displaying message boxes.
+    1. If user is sure to delete the post
+    2. That the user can only delete his own post.
+    @param post post object
+  **/
   presendDelete(post) {
     let alert = this.alertCtrl.create({
       title: 'Confirm delete',
@@ -137,15 +183,15 @@ export class PostPage {
           text: 'Cancel',
           role: 'cancel',
           handler: () => {
-            console.log('Cancel clicked');
+            // console.log('Cancel clicked');
           }
         },
         {
           text: 'Delete',
           handler: () => {
-            if(post.author == this.auth.currentUser._id){
+            if(post.author == this.userId){
               this.delete(post);
-              console.log('Post deleted');
+              // console.log('Post deleted');
               this.doRefresh(null);
             } else {
               let innerAlert = this.alertCtrl.create({
@@ -159,7 +205,7 @@ export class PostPage {
             if(post._id == this.id){
               this.navCtrl.pop();
             }
-            console.log('Post deleted');
+            // console.log('Post deleted');
           }
         }
       ]
@@ -167,6 +213,10 @@ export class PostPage {
     alert.present();
   }
 
+  /**
+    Fetching username by the user id.
+    @param id id object
+  **/
   public getUsernameById(id):Promise<String>{
     return this.userController.getUserById(id)
       .then((data:any) => {

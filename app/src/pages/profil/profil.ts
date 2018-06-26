@@ -33,7 +33,7 @@ user:string = this.auth.currentUser.username;
     @param refresher refresher event object
   **/
   doRefresh(refresher) {
-    console.log('Begin async operation', refresher);
+    // console.log('Begin async operation', refresher);
     this.info = this.auth.getUserInfo();
     this.refreshData(this.info._id);
 
