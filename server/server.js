@@ -1,10 +1,10 @@
-var config = require('./server/_config.js'),
+var config = require('./_config.js'),
   express = require('express'),
   app = express(),
   port = process.env.PORT || 3000,
   mongoose = require('mongoose'),
   morgan      = require('morgan');
-  Comment = require('./server/api/models/commentModel'),
+  Comment = require('./api/models/commentModel'),
   //Post = require('./server/api/models/postModel'),
   bp = require('body-parser');
   module.exports = app;
@@ -25,10 +25,10 @@ app.use(bp.json());
 
 app.use(morgan('dev'));
 
-var commentRoutes = require('./server/api/routes/commentRoutes');
+var commentRoutes = require('./api/routes/commentRoutes');
 commentRoutes(app);
 
-var userRoutes = require('./server/api/routes/userRoutes');
+var userRoutes = require('./api/routes/userRoutes');
 userRoutes(app);
 
 // var authenticateRoutes = require('./server/api/routes/authenticateRoutes');

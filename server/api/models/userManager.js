@@ -1,7 +1,7 @@
 var userModel = require('../models/userModel.js'),
     jwt    = require('jsonwebtoken'),
     User = userModel.schema,
-    app = require('../../../server.js'),
+    app = require('../../../server/server.js'),
     config = require('../../_config.js');
 
 

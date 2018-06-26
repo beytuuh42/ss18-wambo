@@ -20,7 +20,6 @@ export class HomePage {
     content: ''
   }
   val = 10;
-  userId:number
   // colors: Array<string> = ['#d5e5ff', '#ffd5ee', '#d5ffe6', '#d5e5ff', '#d5fff7']
 
   constructor(public modalCtrl: ModalController,
@@ -31,6 +30,7 @@ export class HomePage {
               public storage: Storage,
               public auth: AuthService,
               platform: Platform) {
+
     platform.registerBackButtonAction(() => {
 
       //console.log("backPressed 1");
@@ -94,23 +94,23 @@ export class HomePage {
             console.log('Cancel clicked');
           }
         },
-        // {
-        //   text: 'Delete',
-        //   handler: () => {
-        //     if(post.author == this.auth.currentUser._id){
-        //       this.delete(post);
-        //       console.log('Post deleted');
-        //       this.doRefresh(null);
-        //     } else {
-        //       let innerAlert = this.alertCtrl.create({
-        //         title: 'Fail',
-        //         subTitle: "You can only delete your own posts",
-        //         buttons: ['OK']
-        //       });
-        //       innerAlert.present();
-        //     }
-        //   }
-        // }
+        {
+          text: 'Delete',
+          handler: () => {
+            if(post.author == this.auth.currentUser._id){
+              this.delete(post);
+              console.log('Post deleted');
+              this.doRefresh(null);
+            } else {
+              let innerAlert = this.alertCtrl.create({
+                title: 'Fail',
+                subTitle: "You can only delete your own posts",
+                buttons: ['OK']
+              });
+              innerAlert.present();
+            }
+          }
+        }
       ]
     });
     alert.present();
