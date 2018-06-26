@@ -19,11 +19,6 @@ function getCommentByIdQuery(_id) {
   return Comment.findById(_id);
 };
 
-//retrieving nested comments by id and sorting them
-function getNestedCommentSorted(value, _id, sortBy) {
-  return Comment.find({value: _id}, {}, {$sort: {sortBy: 1}});
-}
-
 //retrieving all comments
 function getAllCommentsQuery() {
   return Comment.find({});
@@ -121,7 +116,7 @@ var getCommentById = function(req, res) {
 
 // Executing the query and returning the result as json or error.
 var getAllComments = function(req, res) {
-  getAllCommentsQuery().exec(function(err, com) {
+  getAllCommentsQuery().sort('-created_at').exec(function(err, com) {
     if (err){
       err.statuscode = '400'
       res.json(err);
@@ -174,7 +169,7 @@ var getNestedCommentsByParentId = function(req, res) {
   getCommentByIdQuery(req.params.commentId)
     .then((com) => {
       curLength = com.ancestors.length;
-      Comment.find({ancestors: req.params.commentId}, {}, {$sort: {created_at: 1}})
+      Comment.find({ancestors: req.params.commentId}, {}, {sort: {created_at: -1}})
         .exec((err, com, next) => {
           if (err){
             err.statuscode = '400';

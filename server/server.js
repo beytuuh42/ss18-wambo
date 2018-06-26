@@ -5,7 +5,6 @@ var config = require('./_config.js'),
   mongoose = require('mongoose'),
   morgan      = require('morgan');
   Comment = require('./api/models/commentModel'),
-  //Post = require('./server/api/models/postModel'),
   bp = require('body-parser');
   module.exports = app;
 
