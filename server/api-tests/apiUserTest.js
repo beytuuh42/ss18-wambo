@@ -4,9 +4,9 @@ process.env.NODE_ENV = 'test';
 const chai = require('chai');
 const expect = require('chai').expect;
 chai.use(require('chai-http'));
-const app = require('../server/server.js'); // The server
-const commentModel = require('../server/api/models/commentModel');
-const userModel = require('../server/api/models/userModel');
+const app = require('../server.js'); // The server
+const commentModel = require('../api/models/commentModel');
+const userModel = require('../api/models/userModel');
 const mongoose = require('mongoose');
 const User = userModel.schema;
 const Comment = commentModel.schema;

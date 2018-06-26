@@ -48,7 +48,8 @@ export class RegisterPage {
           text: 'OK',
           handler: data => {
             if (this.createSuccess) {
-              this.nav.popToRoot();
+              //this.nav.popToRoot();
+              this.nav.setRoot('LoginPage');
             }
           }
         }

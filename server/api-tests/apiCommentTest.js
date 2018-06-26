@@ -4,9 +4,9 @@ process.env.NODE_ENV = 'test';
 const chai = require('chai');
 const expect = require('chai').expect;
 chai.use(require('chai-http'));
-const app = require('../server/server.js');
+const app = require('../server.js');
 const mongoose = require('mongoose');
-const commentModel = require('../server/api/models/commentModel');
+const commentModel = require('../api/models/commentModel');
 const Comment = commentModel.schema;
 
 var db = mongoose.connection;
@@ -19,14 +19,12 @@ describe('API endpoint /comments', function() {
 
   before(function(done) {
     Comment.remove({}, function(err) {
-       console.log('collection removed')
        done();
     });
   });
 
   after(function(done){
     Comment.remove({}, function(err) {
-       console.log('collection removed')
        done();
     });
   });
@@ -115,7 +113,6 @@ describe('API endpoint /comments/:commentId', function() {
 
   after(function(done){
     Comment.remove({}, function(err) {
-       console.log('collection removed')
        done();
     });
   });
@@ -216,7 +213,7 @@ describe('API endpoint /nested-comments/:commentId', function() {
 
 after(function(done){
   Comment.remove({}, function(err) {
-     console.log('collection removed')
+     // console.log('collection removed')
   });
   done();
 });
@@ -224,7 +221,7 @@ after(function(done){
   // get child comments of post
   it('should get children ids of post', function() {
     return chai.request(app)
-      .get('/api/nested/' + commentIdParent)
+      .get('/api/nested-comments/' + commentIdParent)
       .then(function(res) {
         expect(res).to.have.status(200);
         expect(res).to.be.json;

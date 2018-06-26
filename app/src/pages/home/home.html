@@ -1,6 +1,6 @@
 <!-- main navigation -->
 <ion-header>
-  <ion-navbar showWhen="ios">
+  <ion-navbar color=secondaryGreen showWhen="ios">
     <ion-title>
       <p>WAMBO</p>
     </ion-title>
@@ -12,7 +12,7 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
   <ion-list>
-    <ion-item-sliding *ngFor="let post of posts">
+    <ion-item-sliding *ngFor="let post of posts; let last = last" [class.last-item]="last">
       <ion-item class="warpper" [ngStyle]="{'background-color': post.color}" id="{{post._id}}" (click)="pushParams(post._id)">
         <p text-wrap *ngIf="post.content=='[deleted]'" style="font-style:italic;">{{post.content}}</p>
         <p text-wrap *ngIf="post.content!='[deleted]'">{{post.content}}</p>
@@ -39,18 +39,18 @@
           </ion-row>
         </ion-footer>
       </ion-item>
-      <ion-item-options *ngIf="post.content!='[deleted]' && post.author === this.auth.currentUser._id;" side="right">
+      <ion-item-options *ngIf="post.content!='[deleted]' && post.author === this.userId;" side="right">
         <button ion-button (click)="presendDelete(post)">delete</button>
       </ion-item-options>
     </ion-item-sliding>
 
   </ion-list>
 
-  <ion-fab showWhen="android" right bottom #fab2>
+  <ion-fab showWhen="android" center bottom #fab2>
     <button id="androidFab" ion-fab (click)="pushAddPost()"><ion-icon name="md-add" ></ion-icon></button>
   </ion-fab>
 
-  <ion-fab right bottom showWhen="ios">
+  <ion-fab center bottom showWhen="ios">
       <button ion-fab (click)="pushAddPost()" id="iosFab">
         <ion-icon name="ios-add"></ion-icon>
       </button>

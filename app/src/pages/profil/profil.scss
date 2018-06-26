@@ -21,7 +21,8 @@ page-profil {
     font-size: 12pt;
   }
 
-  #profileLogoutButton{
-	   background-color: color($colors, secondaryGreen);
+  #logoutItem{
+	   //background-color: color($colors, secondaryGreen);
+     margin-top:20px;
    }
 }

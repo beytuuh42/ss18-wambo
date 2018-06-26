@@ -8,23 +8,19 @@
     "node": "5.9.1"
   },
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": "mocha './api-tests/**/*.js' --exit"
   },
   "dependencies": {
-    "jsonwebtoken": "^8.3.0",
-    "mongoose": "^5.1.1",
-    "bcrypt-nodejs": "0.0.3",
-    "express": "^4.16.3",
-    "body-parser": "^1.15.2",
-    "morgan": "^1.9.0"
+    "chai": "^4.1.2",
+    "mongoose": "^5.1.1"
   },
   "devDependencies": {
     "@ionic/app-scripts": "3.1.9",
     "chai-http": "^4.0.0",
-    "nodemon": "^1.17.4",
-    "typescript": "~2.6.2",
     "mocha": "^5.2.0",
-    "chai": "^4.1.2"
+    "nodemon": "^1.17.4",
+    "typescript": "~2.6.2"
   },
   "description": "Backend"
 }

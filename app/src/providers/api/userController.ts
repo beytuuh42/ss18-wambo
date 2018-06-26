@@ -140,7 +140,6 @@ export class UserController {
         observe: 'response'
       })
         .subscribe(res => {
-          console.log(res);
           resolve(res);
         }, (err) => {
           reject(new Error("Error creating user: " + err.message));

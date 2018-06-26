@@ -20,6 +20,7 @@ export class HomePage {
     content: ''
   }
   val = 10;
+  userId:number;
   // colors: Array<string> = ['#d5e5ff', '#ffd5ee', '#d5ffe6', '#d5e5ff', '#d5fff7']
 
   constructor(public modalCtrl: ModalController,
@@ -33,30 +34,42 @@ export class HomePage {
 
     platform.registerBackButtonAction(() => {
 
-      //console.log("backPressed 1");
     }, 1);
   }
 
+  /**
+    Runs when the page is about to enter and become the active page.
+    Verifing the token and fetching the username of it, also fetching posts.
+  **/
   ionViewWillEnter(){
     verifyToken(this);
     this.doRefresh(null);
   }
 
+  /**
+    Deleting the given post.
+    @param post post data
+   */
   delete(post) {
     this.apiProvider.deletePostById(post._id)
     .then(data => {
-      console.log("deletePostById said: " + data);
     })
   }
 
+  /**
+    Fetching posts.
+    @param refresher refresher event object
+  **/
   doRefresh(refresher) {
-    console.log('Begin async operation', refresher);
     this.getPosts();
     setTimeout(() => {
       if (refresher) refresher.complete();
     }, 100);
   }
 
+  /**
+    Fetching posts, coloring and saving them in the post object.
+  **/
   getPosts() {
     this.apiProvider.getPosts()
       .then((data:any) => {
@@ -64,15 +77,24 @@ export class HomePage {
       })
   }
 
-  //PostDetails push
+  /**
+    Pushing the clicked post into the post page, for rendering as the parent.
+    @param post post object
+  **/
   pushParams(post) {
     this.navCtrl.push(PostPage, { 'post': post });
   }
 
+  /**
+    Displaying add post page.
+  **/
   pushAddPost() {
     this.navCtrl.push(AddPostPage);
   }
 
+  /**
+    Popping a message box and fetching posts.
+  **/
   addPost() {
     let addPostmodal = this.modalCtrl.create(AddPostPage)
     addPostmodal.onDidDismiss(() => {
@@ -81,7 +103,12 @@ export class HomePage {
     addPostmodal.present()
   }
 
-  //delete confirm alert
+  /**
+    Displaying message boxes.
+    1. If user is sure to delete the post
+    2. That the user can only delete his own post.
+    @param post post object
+  **/
   presendDelete(post) {
     let alert = this.alertCtrl.create({
       title: 'Confirm delete',
@@ -91,7 +118,7 @@ export class HomePage {
           text: 'Cancel',
           role: 'cancel',
           handler: () => {
-            console.log('Cancel clicked');
+            // console.log('Cancel clicked');
           }
         },
         {
@@ -99,7 +126,6 @@ export class HomePage {
           handler: () => {
             if(post.author == this.auth.currentUser._id){
               this.delete(post);
-              console.log('Post deleted');
               this.doRefresh(null);
             } else {
               let innerAlert = this.alertCtrl.create({
@@ -116,6 +142,9 @@ export class HomePage {
     alert.present();
   }
 
+  /**
+    Fetching comments and saving in the comments object.
+  **/
   getComments() {
     this.apiProvider.getComments()
       .then(data => {
@@ -123,6 +152,9 @@ export class HomePage {
       });
   }
 
+  /**
+    Creating a new post and pushing it's ancestors.
+  **/
   sendPost() {
     this.apiProvider.sendPost(this.message).then((result:any) => {
       this.apiProvider.pushAncestors(result, result.body.ancestors).then((abc) => {
@@ -132,8 +164,11 @@ export class HomePage {
     });
   }
 
+  /**
+    Incrementing the likes of a post.
+    @param post post object
+  **/
   incrementLike(post) {
-    console.log("increment");
     this.apiProvider.incrementLike(post._id, this.userId).then((result:any) => {
       post.likes = result.body.likes;
 
@@ -143,6 +178,10 @@ export class HomePage {
     });
   }
 
+  /**
+    Incrementing the dilikes of a post.
+    @param post post object
+  **/
   incrementDislike(post) {
     this.apiProvider.incrementDislike(post._id, this.userId).then((result:any) => {
         post.dislikes = result.body.dislikes;

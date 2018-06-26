@@ -4,7 +4,7 @@
     <button ion-button color="light" class="AddPostButton" (click)="addPost()"><ion-icon name="ios-add"></ion-icon></button>
   </ion-toolbar> -->
 
-  <ion-navbar>
+  <ion-navbar color=secondaryGreen>
     <ion-title>
       <p id = "postTitle">Comments</p>
     </ion-title>
@@ -47,7 +47,7 @@
           </ion-row>
         </ion-footer>
       </ion-item>
-      <ion-item-options *ngIf="post.content!='[deleted]' && post.author === this.auth.currentUser._id"  side="right">
+      <ion-item-options *ngIf="post.content!='[deleted]' && post.author === this.userId"  side="right">
         <button ion-button (click)="presendDelete(post)">delete</button>
       </ion-item-options>
     </ion-item-sliding>
@@ -80,7 +80,7 @@
 
 
     <!-- </ion-card> -->
-    <ion-item-sliding class="secondLevel" *ngFor="let comment of comments">
+    <ion-item-sliding class="secondLevel" *ngFor="let comment of comments; let last = last" [class.last-item]="last">
       <ion-item class="warpper" [ngStyle]="{'background-color': comment.color}" id="{{comment._id}}" (click)="pushParams(comment._id)">
         <div class="commentHeader">{{comment.username}}</div>
         <p text-wrap *ngIf="comment.content=='[deleted]'" style="font-style:italic;">{{comment.content}}</p>
@@ -114,11 +114,11 @@
     </ion-item-sliding>
   </ion-list>
 
-  <ion-fab showWhen="android" right bottom #fab2>
+  <ion-fab showWhen="android" center bottom #fab2>
     <button id="androidFab" ion-fab (click)="pushAddPost(post.ancestors)"><ion-icon name="md-add"></ion-icon></button>
   </ion-fab>
 
-  <ion-fab right bottom showWhen="ios">
+  <ion-fab center bottom showWhen="ios">
       <button id="iosFab" ion-fab (click)="pushAddPost(post.ancestors)">
         <ion-icon name="ios-add"></ion-icon>
       </button>

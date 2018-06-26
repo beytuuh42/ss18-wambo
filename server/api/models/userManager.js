@@ -117,7 +117,6 @@ var getUserForLogin = function(req, res){
   getUserByUsernameQuery(req.body.username).exec(function(err, user) {
 
     if (err) {
-        console.log("user find error");
         throw err;
     }
 

@@ -17,8 +17,11 @@ exports.config = {
         directConnect: true,
         baseUrl: 'http://localhost:8100/',
         specs: [
-            'e2e-tests/**/*.tests.js'
-            //'e2e-tests/post.tests.js'
+            'e2e-tests/register.tests.js',
+            'e2e-tests/login.tests.js',
+            'e2e-tests/home.tests.js',
+            'e2e-tests/post.tests.js',
+            'e2e-tests/profil.tests.js'
         ],
         jasmineNodeOpts: {
             isVerbose: true,

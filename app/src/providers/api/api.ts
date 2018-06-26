@@ -297,7 +297,6 @@ export class ApiProvider {
       } else {
         list = result.disliked_by;
       }
-      console.log(list.length);
       if(typeof list != 'undefined' && list instanceof Array && list.length != 0){
         list.forEach((x:any) => {
           if(x == userId){
