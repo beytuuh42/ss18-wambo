@@ -20,6 +20,7 @@ export class HomePage {
     content: ''
   }
   val = 10;
+  userId:number;
   // colors: Array<string> = ['#d5e5ff', '#ffd5ee', '#d5ffe6', '#d5e5ff', '#d5fff7']
 
   constructor(public modalCtrl: ModalController,
