@@ -20,11 +20,7 @@ The App is based on node.js, Ionic (Angular) and MongoDB.
 docker-compose build
 docker-compose up
 
-if error occures, go into /app and /server and run:
+3. if error occures, go into /app and /server and run:
 npm install
 
 Repeat step 2.
-
-
-Start the "start.bat" file.
-It'll run npm install commands and run the app.
