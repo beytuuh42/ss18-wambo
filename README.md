@@ -14,5 +14,5 @@ We made a jodellike app and implemented a nested commenting system.
 
 ## Install instructions:
 
-Start the "start.bat" file.
-It'll run npm install commands and run the app.
+
+Run docker-compose build and docker-compose up
