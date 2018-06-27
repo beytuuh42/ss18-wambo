@@ -9,7 +9,7 @@ services:
       - './server:/usr/src/app/server'
       - '/usr/src/app/server/'
     ports:
-      - '3000:3000'
+      - '0.0.0.0:3000:3000'
     links:
       - mongodb
     tty: true
@@ -22,7 +22,7 @@ services:
       - './app:/usr/app/client'
       - '/usr/src/app/client/'
     ports:
-      - '8100:8100'
+      - '0.0.0.0:8100:8100'
     links:
       - server
     tty: true
@@ -31,4 +31,4 @@ services:
     container_name: mdb
     image: mongo
     ports:
-      - "27015:27015"
+      - "0.0.0.0:27015:27015"

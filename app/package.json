@@ -46,7 +46,7 @@
     "chai": "^4.1.2",
     "protractor": "^5.3.2"
   },
-  "description": "An Ionic project",
+  "description": "Frontend",
   "cordova": {
     "platforms": [
       "ios",
