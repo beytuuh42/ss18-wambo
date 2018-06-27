@@ -1,0 +1,7 @@
+# Ignore .git folder
+.git*
+build/
+target/
+node_modules/
+.bundler/
+etc

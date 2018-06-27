@@ -1,7 +1,7 @@
 var userModel = require('../models/userModel.js'),
     jwt    = require('jsonwebtoken'),
     User = userModel.schema,
-    app = require('../../../server.js'),
+    app = require('../../../server/server.js'),
     config = require('../../_config.js');
 
 
@@ -117,7 +117,6 @@ var getUserForLogin = function(req, res){
   getUserByUsernameQuery(req.body.username).exec(function(err, user) {
 
     if (err) {
-        console.log("user find error");
         throw err;
     }
 

@@ -1,0 +1,34 @@
+version: "2"
+services:
+
+  server:
+    container_name: nodejs_server
+    build: ./server/
+    image: nodejs_server
+    volumes:
+      - './server:/usr/src/app/server'
+      - '/usr/src/app/server/'
+    ports:
+      - '0.0.0.0:3000:3000'
+    links:
+      - mongodb
+    tty: true
+
+  client:
+    container_name: ionic_client
+    build: ./app/
+    image: ionic_client
+    volumes:
+      - './app:/usr/app/client'
+      - '/usr/src/app/client/'
+    ports:
+      - '0.0.0.0:8100:8100'
+    links:
+      - server
+    tty: true
+
+  mongodb:
+    container_name: mdb
+    image: mongo
+    ports:
+      - "0.0.0.0:27015:27015"

@@ -1,0 +1,41 @@
+page-post {
+  .secondLevel {
+    padding-top: 10px;
+    margin:auto;
+    width:  90%;
+  }
+
+  ion-item {
+    min-height: 100px !important;
+    p {
+      font-size: 1.5rem !important;
+      color: color($colors, dark) !important;
+      margin-bottom: 45px !important;
+    }
+  }
+
+  .commentHeader {
+    font-size: 1.2rem !important;
+    margin-bottom: 10px !important;
+  }
+
+  #commentDeleteButton {
+    margin-top: 10px;
+  }
+
+  ion-fab[bottom] {
+    bottom:15px;
+  }
+
+  #androidFab{
+    background: color($colors, secondaryGreen);
+  }
+
+  #iosFab{
+    background: color($colors, secondaryGreen);
+  }
+
+  .last-item{
+    margin-bottom: 15%;
+  }
+}
