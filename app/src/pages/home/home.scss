@@ -1,0 +1,29 @@
+page-home {
+
+  ion-item-sliding {
+    margin-bottom: 10px;
+  }
+
+  ion-item {
+    min-height: 150px !important;
+
+    p {
+      font-size: 1.5rem !important;
+      color: color($colors, dark) !important;
+      margin-bottom: 30px !important;
+    }
+  }
+  ion-fab[bottom] {
+    bottom:15px;
+  }
+  #androidFab{
+    background: color($colors, secondaryGreen);
+  }
+
+  #iosFab{
+    background: color($colors, secondaryGreen);
+  }
+  .last-item{
+    margin-bottom: 15%;
+  }
+}
