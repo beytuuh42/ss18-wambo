@@ -16,11 +16,11 @@ The App is based on node.js, Ionic (Angular) and MongoDB.
 ## Install instructions:
 1. Clone the project
 
-2. RUN in your commandline:
+2. RUN in your local commandline:
 docker-compose build
 docker-compose up
 
-3. if error occures, go into /app and /server and run:
+3. if error occures, go into /app and /server and run local:
 npm install
 
 Repeat step 2.
