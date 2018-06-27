@@ -23,4 +23,4 @@ docker-compose up
 3. if error occures, go into /app and /server and run local:
 npm install
 
-Repeat step 2.
+4. Repeat step 2.
